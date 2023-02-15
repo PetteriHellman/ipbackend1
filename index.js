@@ -1,6 +1,7 @@
 const http = require('http')
 const express = require('express')
 const cors = require('cors')
+const { response } = require('express')
 const app = express()
 
 app.use(cors())
@@ -62,6 +63,22 @@ app.get('/api/iptable/:id', (request, response) => {
     response.status(404).end()
   }
 })
+
+app.post('/api/iptable/user', (request, response) => {
+  const body = request.body
+  const user = {
+    user: body.user,
+    id: generateId()
+  }
+  iptable = iptable.concat(user)
+  response.json(user)
+
+})
+
+const generateId = () => {
+  const id = Math.round(Math.random() * 1000000)
+  return id
+}
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
