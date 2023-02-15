@@ -1,14 +1,12 @@
-const http = require('http')
-const express = require('express')
-const cors = require('cors')
 const mongoose = require('mongoose')
-const app = express()
 
-app.use(cors())
-app.use(express.static('build'))
-app.use(express.json())
+if (process.argv.length<3) {
+  console.log('give password as argument')
+  process.exit(1)
+}
 
 const password = process.argv[2]
+
 const url =
   `mongodb+srv://admin:${password}@cluster0.chqauzf.mongodb.net/ipdatabase?retryWrites=true&w=majority`
 
@@ -18,10 +16,10 @@ mongoose.connect(url)
 const kayttajaSchema = new mongoose.Schema({
   id: Number, 
   nimi: String,
-  sahkoposti: String,
+  sähköposti: String,
   salasana: String,
   ip: String,
-  ryhma: String,
+  ryhmä: String,
   tyyppi: String,
 
 })
@@ -38,20 +36,14 @@ const kayttaja = new Kayttaja({
   tyyppi: "user",
 })
 
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
-})
+// Note.find({}).then(result => {
+//     result.forEach(note => {
+//       console.log(note)
+//     })
+//     mongoose.connection.close()
+//   })
 
-app.post('/api/iptable/user', (request, response) =>{
-  response.json(request)
+kayttaja.save().then(result => {
+  console.log('User saved!')
+  mongoose.connection.close()
 })
-
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
-
-// kayttaja.save().then(result => {
-//   console.log('User saved!')
-mongoose.connection.close()
-// })

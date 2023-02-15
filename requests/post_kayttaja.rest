@@ -1,0 +1,12 @@
+POST http://localhost:3001/api/iptable/user
+Content-Type: application/json
+
+{
+    "id": 1, 
+  "nimi": "Petterijhmbvgng Hellman",
+  "sahkoposti": "hf@gmail.com",
+  "salasana": "12387699456",
+  "ip": "192.1.128.31",
+  "ryhma": "STMIh17SPA",
+  "tyyppi": "user"
+}
