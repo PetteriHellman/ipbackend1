@@ -10,34 +10,34 @@ app.use(express.json())
 
 let iptable = [
   {
-    "user" : "jorma",
-    "id" : 1,
-    "ips" : [
+    'user' : 'jorma',
+    'id' : 1,
+    'ips' : [
       {
-        "ip" : "10.36.64.101",
-        "desc" : "server 1",
-        "id" : 1
+        'ip' : '10.36.64.101',
+        'desc' : 'server 1',
+        'id' : 1
       },
       {
-        "ip" : "10.36.64.102",
-        "desc" : "server 2",
-        "id" : 2
+        'ip' : '10.36.64.102',
+        'desc' : 'server 2',
+        'id' : 2
       }
     ],
   },
   {
-    "user" : "jaska",
-    "id" : 2,
-    "ips" : [
+    'user' : 'jaska',
+    'id' : 2,
+    'ips' : [
       {
-        "ip" : "10.36.64.103",
-        "desc" : "server 1",
-        "id" : 1
+        'ip' : '10.36.64.103',
+        'desc' : 'server 1',
+        'id' : 1
       },
       {
-        "ip" : "10.36.64.104",
-        "desc" : "server 2",
-        "id" : 2
+        'ip' : '10.36.64.104',
+        'desc' : 'server 2',
+        'id' : 2
       }
     ],
   }
