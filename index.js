@@ -65,6 +65,45 @@ app.post('/api/iptable', (request, response, next) => {
     .catch(error => next(error))
 })
 
+//Uuden IP osoitteen lisäys käyttäjälle
+app.post('/api/iptable/:id/ips', async (request, response) => {
+  const userId = request.params.id
+  const newIp = { ip: request.body.ip, desc: request.body.desc }
+  try {
+    const user = await User.findOne({ _id: userId })
+    if (!user) {
+      return res.status(404).send('Käyttäjää ei löytynyt')
+    }
+    user.ips.push(newIp)
+    await user.save()
+    response.send(user)
+  } catch (error) {
+    console.log(error)
+    response.status(500).send('Virhe tallennettaessa tietoja');
+  }
+})
+
+// app.post('/api/iptable/:id/ips', (req, res) => {
+//   const userId = req.params.id
+//   const newIp = {
+//     ip: req.body.ip,
+//     desc: req.body.desc
+//   }
+
+//   User.updateOne(
+//     { _id: userId },
+//     { $push: { 'ips': newIp } },
+//     (err, result) => {
+//       if (err) {
+//         res.status(500).send(err);
+//       } else {
+//         res.send(result);
+//       }
+//     }
+//   )
+// })
+
+
 app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {

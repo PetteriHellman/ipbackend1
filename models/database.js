@@ -17,17 +17,28 @@ mongoose.connect(url)
     console.log('error connecting to MongoDB:', error.message)
   })
 
+
+const ipSchema = new mongoose.Schema({
+  ip: {
+    type: String,
+    required: true,
+    unique: true,
+    match: /^([0-9]{1,3}\.){3}[0-9]{1,3}$/,
+  },
+  desc: {
+    type: String,
+    minlength: 5,
+    required: true,
+  }
+})
+
 const userSchema = new mongoose.Schema({
   user: {
     type: String,
     minlength: 5,
-    required: true
+    required: true,
   },
-  ip: {
-    type: String,
-    minlength: 5,
-    required: false
-  }
+  ips: [ipSchema]
 })
 
 userSchema.set('toJSON', {
@@ -40,5 +51,5 @@ userSchema.set('toJSON', {
 
 // console.log('person saved!')
 // mongoose.connection.close()
-
+module.exports = mongoose.model('ipSchema', ipSchema)
 module.exports = mongoose.model('user', userSchema)
