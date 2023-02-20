@@ -72,7 +72,7 @@ app.post('/api/iptable/:id/ips', async (request, response) => {
   try {
     const user = await User.findOne({ _id: userId })
     if (!user) {
-      return res.status(404).send('Käyttäjää ei löytynyt')
+      return response.status(404).send('Käyttäjää ei löytynyt')
     }
     user.ips.push(newIp)
     await user.save()
