@@ -1,121 +1,110 @@
-const http = require('http')
+require('dotenv').config()
 const express = require('express')
-const cors = require('cors')
-const mongoose = require('mongoose')
-const { response } = require('express')
 const app = express()
-
-app.use(cors())
-app.use(express.static('build'))
 app.use(express.json())
 
-const password = process.argv[2]
-const url =
-  `mongodb+srv://admin:${password}@cluster0.chqauzf.mongodb.net/ipdatabase?retryWrites=true&w=majority`
+const morgan = require('morgan')
 
-mongoose.set('strictQuery', false)
-mongoose.connect(url)
+const cors = require('cors')
+app.use(cors())
 
-const kayttajaSchema = new mongoose.Schema({
-  id: Number, 
-  nimi: String,
-  sahkoposti: String,
-  salasana: String,
-  ip: String,
-  ryhma: String,
-  tyyppi: String,
+const User = require('./models/database')
 
-})
+//const mongoose = require('mongoose')
 
-const Kayttaja = mongoose.model('Kayttaja', kayttajaSchema)
+app.use(morgan('tiny'))
+app.use(express.static('build'))
 
-const kayttaja = new Kayttaja({
-  id: 1, 
-  nimi: "Petteri Hellman",
-  sahkoposti: "hfhfhf@gmail.com",
-  salasana: "123456",
-  ip: "192.1.128.31",
-  ryhma: "STMI17SPA",
-  tyyppi: "user",
-})
-let iptable = [
-  {
-    'user' : 'jorma',
-    'id' : 1,
-    'ips' : [
-      {
-        'ip' : '10.36.64.101',
-        'desc' : 'server 1',
-        'id' : 1
-      },
-      {
-        'ip' : '10.36.64.102',
-        'desc' : 'server 2',
-        'id' : 2
-      }
-    ],
-  },
-  {
-    'user' : 'jaska',
-    'id' : 2,
-    'ips' : [
-      {
-        'ip' : '10.36.64.103',
-        'desc' : 'server 1',
-        'id' : 1
-      },
-      {
-        'ip' : '10.36.64.104',
-        'desc' : 'server 2',
-        'id' : 2
-      }
-    ],
-  }
-]
-
-
-
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
-})
-
-app.get('/api/iptable/', (request, response) => {
-  response.json(iptable)
-
-})
-
-app.get('/api/iptable/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const user = iptable.find(user => user.id === id)
-  if (user) {
-    response.json(user)
-  } else {
-    response.status(404).end()
-  }
-})
-
-app.post('/api/iptable/user', (request, response) => {
-  const body = request.body
-  const user = {
-    user: body.user,
-    id: generateId()
-  }
-  iptable = iptable.concat(user)
-  response.json(user)
-
-})
-
-const generateId = () => {
-  const id = Math.round(Math.random() * 1000000)
-  return id
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
 }
 
-const PORT = process.env.PORT || 3001
+app.get('/', (request, response) => {
+  response.send('<h1>Hello world</h1>')
+})
+
+//Haetaan kaikki
+app.get('/api/iptable', (request, response) => {
+  User.find({}).then(users => {
+    response.json(users)
+  })
+})
+
+//Haetaan yksittäinen
+app.get('/api/iptable/:id', (request, response, next) => {
+  User.findById(request.params.id)
+    .then(user => {
+      if (user) {
+        response.json(user)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
+})
+
+//Poistetaan
+app.delete('/api/iptable/:id', (request, response, next) => {
+  User.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+})
+
+//Lähetään
+app.post('/api/iptable', (request, response, next) => {
+  const body = request.body
+  const user = new User({
+    user: body.user,
+  })
+
+  user.save().then(savedUser => {
+    response.json(savedUser)
+  })
+    .catch(error => next(error))
+})
+
+//Uuden IP osoitteen lisäys käyttäjälle
+app.post('/api/iptable/:id/ips', async (request, response) => {
+  const userId = request.params.id
+  const newIp = { ip: request.body.ip, desc: request.body.desc }
+  try {
+    const user = await User.findOne({ _id: userId })
+    if (!user) {
+      return response.status(404).send('Käyttäjää ei löytynyt')
+    }
+    user.ips.push(newIp)
+    await user.save()
+    response.send(user)
+  } catch (error) {
+    console.log(error)
+    response.status(500).send('Virhe tallennettaessa tietoja')
+  }
+})
+
+
+
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
+
+const PORT = process.env.PORT
+//const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
-
-// kayttaja.save().then(result => {
-//   console.log('User saved!')
-mongoose.connection.close()
-// })

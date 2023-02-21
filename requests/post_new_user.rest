@@ -1,4 +1,4 @@
-POST http://localhost:3001/api/iptable/user
+POST http://localhost:3001/api/iptable/
 Content-Type: application/json
 
 {
