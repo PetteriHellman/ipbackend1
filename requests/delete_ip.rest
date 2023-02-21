@@ -1,1 +1,1 @@
-DELETE http://localhost:3001/api/iptable/3f4aefdda41acdf951ddd04/ips
+DELETE http://localhost:3001/api/iptable/3f4aefdda41acdf951ddd04/ips/3f4aefdda41acdf951ddd04

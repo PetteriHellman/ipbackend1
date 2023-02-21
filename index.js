@@ -10,6 +10,7 @@ app.use(cors())
 
 const User = require('./models/database')
 
+
 //const mongoose = require('mongoose')
 
 app.use(morgan('tiny'))
@@ -45,6 +46,14 @@ app.get('/api/iptable/:id', (request, response, next) => {
 
 //Poistetaan
 app.delete('/api/iptable/:id', (request, response, next) => {
+  User.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+})
+//Poistetaan IP
+app.delete('/api/iptable/:id/ips/:id', (request, response, next) => {
   User.findByIdAndRemove(request.params.id)
     .then(result => {
       response.status(204).end()

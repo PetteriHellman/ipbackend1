@@ -1,7 +1,7 @@
-POST http://localhost:3001/api/iptable/63f4ae26da41acdf951ddd01/ips
+POST http://localhost:3001/api/iptable/63f4b48f62cd4c14493491c4/ips
 Content-Type: application/json
 
 {
-  "ip" : "192.168.0.2",
+  "ip" : "192.168.0.3",
   "desc" : "Test1"
 }
