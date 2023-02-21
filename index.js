@@ -43,9 +43,32 @@ app.get('/api/iptable/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-//Poistetaan
+//Poistetaan koko käyttäjä
 app.delete('/api/iptable/:id', (request, response, next) => {
   User.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+})
+
+//Yksittäisen IP osoitteen poisto käyttäjältä
+app.delete('/api/iptable/:userId/ips/:ipId', (req, res, next) => {
+  const { userId, ipId } = req.params
+  User.findById(userId)
+    .then(user => {
+      if (!user) {
+        return res.status(404).json({ error: 'Käyttäjää ei löytynyt' })
+      }
+
+      const ip = user.ips.id(ipId)
+      if (!ip) {
+        return res.status(404).json({ error: 'Yhtään IP-osoitetta ei löytynyt' })
+      }
+
+      ip.remove()
+      return user.save()
+    })
     .then(result => {
       response.status(204).end()
     })
