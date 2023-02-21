@@ -79,29 +79,11 @@ app.post('/api/iptable/:id/ips', async (request, response) => {
     response.send(user)
   } catch (error) {
     console.log(error)
-    response.status(500).send('Virhe tallennettaessa tietoja');
+    response.status(500).send('Virhe tallennettaessa tietoja')
   }
 })
 
-// app.post('/api/iptable/:id/ips', (req, res) => {
-//   const userId = req.params.id
-//   const newIp = {
-//     ip: req.body.ip,
-//     desc: req.body.desc
-//   }
 
-//   User.updateOne(
-//     { _id: userId },
-//     { $push: { 'ips': newIp } },
-//     (err, result) => {
-//       if (err) {
-//         res.status(500).send(err);
-//       } else {
-//         res.send(result);
-//       }
-//     }
-//   )
-// })
 
 
 app.use(unknownEndpoint)
