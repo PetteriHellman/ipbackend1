@@ -51,4 +51,5 @@ userSchema.set('toJSON', {
 
 // console.log('person saved!')
 // mongoose.connection.close()
+module.exports = mongoose.model('ipSchema', ipSchema)
 module.exports = mongoose.model('user', userSchema)
