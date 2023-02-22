@@ -1,5 +1,4 @@
 require('dotenv').config()
-const bodyParser = require('body-parser');
 const express = require('express')
 const app = express()
 app.use(express.json())
@@ -92,7 +91,6 @@ app.delete('/api/iptable/:userId/ips/:ipId', (req, res, next) => {
 //Lähetään
 app.post('/api/iptable', (request, response, next) => {
   const body = request.body
-  console.log(body)
   const user = new User({
     user: body.user,
     email: body.email,
@@ -123,6 +121,26 @@ app.post('/api/iptable/:id/ips', async (request, response) => {
   }
 })
 
+const router = express.Router();
+router.post('/api/iptable/:id', async (req, res) => {
+  const { user, email, password, newPassword } = req.body;
+  console.log(req.body)
+  try {
+    const user = await User.findOne({ user, email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    user.password = newPassword;
+    await user.save();
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+module.exports = router;
+
 app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
@@ -137,22 +155,6 @@ const errorHandler = (error, request, response, next) => {
 
   next(error)
 }
-
-app.use(bodyParser.json());
-//update password
-app.post('/api/iptable/', async (req, res) => {
-  const { userEmail, oldPassword, newPassword } = req.body;
-
-  try {
-    const result = await updatePassword(userEmail, oldPassword, newPassword);
-    res.send(result);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal server error');
-  }
-});
-
-app.use(errorHandler)
 
 const PORT = process.env.PORT
 //const PORT = process.env.PORT || 3001
