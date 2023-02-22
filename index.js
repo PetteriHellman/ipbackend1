@@ -43,6 +43,18 @@ app.get('/api/iptable/:id', (request, response, next) => {
     })
     .catch(error => next(error))
 })
+//trying to get individual ip
+app.get('/api/iptable/:id/ips/:id', (request, response, next) => {
+  User.findById(request.params.id)
+    .then(user => {
+      if (user) {
+        response.json(user)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
+})
 
 //Poistetaan
 app.delete('/api/iptable/:id', (request, response, next) => {
