@@ -64,14 +64,6 @@ app.delete('/api/iptable/:id', (request, response, next) => {
     })
     .catch(error => next(error))
 })
-//Poistetaan IP
-app.delete('/api/iptable/:id/ips/:id', (request, response, next) => {
-  User.findByIdAndRemove(request.params.id)
-    .then(result => {
-      response.status(204).end()
-    })
-    .catch(error => next(error))
-})
 
 //Lähetään
 app.post('/api/iptable', (request, response, next) => {
@@ -103,9 +95,6 @@ app.post('/api/iptable/:id/ips', async (request, response) => {
     response.status(500).send('Virhe tallennettaessa tietoja')
   }
 })
-
-
-
 
 app.use(unknownEndpoint)
 
