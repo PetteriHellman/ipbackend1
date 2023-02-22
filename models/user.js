@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
 const userSchema = new mongoose.Schema({
-  user: {
+  name: {
     type: String,
     minlength: 5,
     required: true,
@@ -10,11 +10,11 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+    match: /^[\w-\\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
   },
-  password: {
+  passwordHash: {
     type: String,
-    required: true,
+    required: false,
   },
   ips: [
     {
@@ -23,12 +23,14 @@ const userSchema = new mongoose.Schema({
     }
   ],
 })
-
+userSchema.plugin(uniqueValidator)
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
+    // the passwordHash should not be revealed
+    delete returnedObject.passwordHash
   }
 })
 

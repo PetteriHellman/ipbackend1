@@ -1,7 +1,8 @@
-POST http://localhost:3001/api/iptable/63f4d177e19d2fcc41944eb2/ips
+POST http://localhost:3001/api/ips/
 Content-Type: application/json
 
 {
-  "ip" : "192.168.0.3",
+  "userId": "63f624c05d6c7628c346791f",
+  "ip" : "192.168.0.5",
   "desc" : "Test1"
 }

@@ -21,6 +21,7 @@ const ipSchema = new mongoose.Schema({
   ],
 })
 ipSchema.plugin(uniqueValidator)
+
 ipSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
