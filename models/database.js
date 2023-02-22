@@ -41,6 +41,14 @@ const userSchema = new mongoose.Schema({
   ips: [ipSchema]
 })
 
+ipSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  }
+})
+
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
@@ -51,4 +59,5 @@ userSchema.set('toJSON', {
 
 // console.log('person saved!')
 // mongoose.connection.close()
+module.exports = mongoose.model('ipSchema', ipSchema)
 module.exports = mongoose.model('user', userSchema)

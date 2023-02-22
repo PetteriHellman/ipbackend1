@@ -1,4 +1,4 @@
-POST http://localhost:3001/api/iptable/63f4b48f62cd4c14493491c4/ips
+POST http://localhost:3001/api/iptable/63f4d177e19d2fcc41944eb2/ips
 Content-Type: application/json
 
 {
