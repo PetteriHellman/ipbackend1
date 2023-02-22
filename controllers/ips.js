@@ -6,7 +6,8 @@ const User = require('../models/user')
 //haetaan kaikki IP-osoitteet
 ipsRouter.get('/', async (request, response) => {
   const ips = await IPs
-    .find({}).populate('user', { username: 1, name: 1 })
+  //  .find({}).populate('user', { email: 1, name: 1 })
+    .find({})
 
   response.json(ips)
 })
