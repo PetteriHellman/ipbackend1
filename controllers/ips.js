@@ -15,15 +15,14 @@ ipsRouter.get('/', async (request, response) => {
 //tallennetaan ip osoite
 ipsRouter.post('/', async (request, response) => {
   const body = request.body
-
   const user = await User.findById(body.userId)
 
   const ip = new IPs({
     ip: body.ip,
     desc: body.desc,
-    user: user._id
+    user: user._id,
   })
-
+ 
   const savedIP = await ip.save()
 
   user.ips = user.ips.concat(savedIP._id)

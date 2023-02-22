@@ -2,7 +2,8 @@ POST http://localhost:3001/api/ips/
 Content-Type: application/json
 
 {
-  "userId": "63f6426ae35eba314c1ba500",
-  "ip" : "192.168.0.5",
-  "desc" : "Test1"
+  "userId": "63f672c39c26b6982124e0d1",
+  "ip" : "192.168.0.10",
+  "desc" : "Testi aika 5min",
+  "TTL" : 5
 }
