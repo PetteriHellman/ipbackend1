@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator')
 
 mongoose.set('strictQuery', false)
 
@@ -16,7 +17,6 @@ mongoose.connect(url)
   .catch((error) => {
     console.log('error connecting to MongoDB:', error.message)
   })
-
 
 const ipSchema = new mongoose.Schema({
   ip: {
@@ -36,6 +36,15 @@ const userSchema = new mongoose.Schema({
   user: {
     type: String,
     minlength: 5,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+  },
+  password: {
+    type: String,
     required: true,
   },
   ips: [ipSchema]
@@ -59,5 +68,7 @@ userSchema.set('toJSON', {
 
 // console.log('person saved!')
 // mongoose.connection.close()
+ipSchema.plugin(uniqueValidator)
+userSchema.plugin(uniqueValidator)
 module.exports = mongoose.model('ipSchema', ipSchema)
 module.exports = mongoose.model('user', userSchema)

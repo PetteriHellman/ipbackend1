@@ -1,4 +1,5 @@
 require('dotenv').config()
+const bodyParser = require('body-parser');
 const express = require('express')
 const app = express()
 app.use(express.json())
@@ -91,8 +92,11 @@ app.delete('/api/iptable/:userId/ips/:ipId', (req, res, next) => {
 //Lähetään
 app.post('/api/iptable', (request, response, next) => {
   const body = request.body
+  console.log(body)
   const user = new User({
     user: body.user,
+    email: body.email,
+    password: body.password,
   })
 
   user.save().then(savedUser => {
@@ -133,6 +137,20 @@ const errorHandler = (error, request, response, next) => {
 
   next(error)
 }
+
+app.use(bodyParser.json());
+//update password
+app.post('/api/iptable/', async (req, res) => {
+  const { userEmail, oldPassword, newPassword } = req.body;
+
+  try {
+    const result = await updatePassword(userEmail, oldPassword, newPassword);
+    res.send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+});
 
 app.use(errorHandler)
 
