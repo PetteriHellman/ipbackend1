@@ -1,0 +1,1 @@
+DELETE http://localhost:3001/api/ips/63f64943b7501c5a35d3d4bb
