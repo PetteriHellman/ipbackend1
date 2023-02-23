@@ -30,7 +30,7 @@ app.use(middleware.requestLogger)
 
 app.use('/api/ips', ipsRouter)
 app.use('/api/users', usersRouter)
-app.use('/api/users/:id/change-password', passRouter)
+app.use('/api', passRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
