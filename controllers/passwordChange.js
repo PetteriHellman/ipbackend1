@@ -7,11 +7,8 @@ const User = require('../models/user')
 
   passRouter.post('/users/:id/change-password', async (req, res) => {
     const { oldPassword, newPassword } = req.body;
-    console.log(req.body)
     try {
       const user = await User.findById(req.params.id);
-      console.log(user)
-      console.log(req.params.id)
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
