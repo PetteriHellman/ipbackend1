@@ -1,8 +1,8 @@
-POST http://localhost:3001/api/iptable/
+POST http://localhost:3001/api/users/
 Content-Type: application/json
 
 {
-  "user" : "Jonny Test",
-  "email" : "test@gmail.com",
-  "password" : "12345"
+  "name" : "Matti Meikäläinen",
+  "password" : "1234",
+  "email" : "matti@gmail.com"
 }
