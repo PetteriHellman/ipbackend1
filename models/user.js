@@ -10,11 +10,12 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
     match: /^[\w-\\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
   },
   passwordHash: {
     type: String,
-    required: false,
+    required: true,
   },
   ips: [
     {
