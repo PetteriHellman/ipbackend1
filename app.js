@@ -9,6 +9,7 @@ require('express-async-errors')
 const ipsRouter = require('./controllers/ips')
 const usersRouter = require('./controllers/users')
 const middleware = require('./utils/middleware')
+const passRouter = require('./controllers/passwordChange')
 
 mongoose.set('strictQuery', false)
 
@@ -29,6 +30,7 @@ app.use(middleware.requestLogger)
 
 app.use('/api/ips', ipsRouter)
 app.use('/api/users', usersRouter)
+app.use('/api/users/:id/change-password', passRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
