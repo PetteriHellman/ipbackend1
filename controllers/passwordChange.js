@@ -21,7 +21,7 @@ const User = require('../models/user')
        // Hash and update new password
        const salt = await bcrypt.genSalt(10);
        const hashedPassword = await bcrypt.hash(newPassword, salt);
-       user.password = hashedPassword;
+       user.passwordHash = hashedPassword;
        await user.save();
   
     res.status(200).json({ message: 'Password updated successfully' });
