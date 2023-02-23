@@ -1,8 +1,9 @@
 POST http://localhost:3001/api/ips/
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hdHRpQGdtYWlsLmNvbSIsImlkIjoiNjNmNzgxMTI4MzcxMjQ4YjhkZGRkNzU0IiwiaWF0IjoxNjc3MTY1NTg5fQ.qIBozKPhA8gD0-eKgIJA_GzewOaoxTwOY51XeLl5rd8
 
 {
-  "userId": "63f672c39c26b6982124e0d1",
+  "userId": "63f781128371248b8dddd754",
   "ip" : "192.168.0.10",
   "desc" : "Testi aika 5min",
   "TTL" : 5

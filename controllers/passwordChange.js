@@ -27,7 +27,7 @@ passRouter.post('/users/:id/change-password', async (req, res, next) => {
     
   } catch (error) {
     next(error)
-    res.status(500).json({ message: 'Internal server error' })
+    res.status(500).json({ error: 'Internal server error' })
   }
 })
 
