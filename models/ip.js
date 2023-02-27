@@ -16,7 +16,10 @@ const ipSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: '1h'
+  },
+  expirationDate: {
+    type: Date,
+    expires: 0,
   },
   user: [
     {

@@ -4,7 +4,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hdHRpQ
 
 {
   "userId": "63f781128371248b8dddd754",
-  "ip" : "192.168.0.10",
-  "desc" : "Testi aika 5min",
-  "TTL" : 5
+  "ip" : "192.168.0.2",
+  "desc" : "Testi",
+  "TTL" : 1
 }
