@@ -49,16 +49,24 @@ ipsRouter.post('/', async (request, response) => {
 })
 
 const randomIP = () => {
+  //Arvotaan IP-osoite 668 osoitteesta, jossa 10.36.64.101 on ensimmäinen osoite ja 10.36.66.254 on viimeinen /22 netmaskilla
   const ipArray = ipblocks('10.36.64.101', 22, Math.floor(Math.random() *(668 - 101) + 101))
 
+  //Tehdään pisteillä erotettu stringi ipblocks:n palauttamasta arraysta
   const ipString = ipArray.join('.')
+  
+  //Palautetaan stringinä oleva ip osoite
   return ipString
 }
 
 ipsRouter.get('/next-ip', async (request, response) => {
+  //Generoidaan satunainen IP-soite
   const ip = randomIP()
+
+  //Muodostetaan tietokanta kysely
   const query = IPs.where({ ip: ip })
 
+  //Jos kannasta ei löydy osoitetta plautetaan generoitu IP-osoite
   if (await query.findOne() == null) {
     response.json({'ip' :ip})
   }
