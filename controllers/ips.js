@@ -59,17 +59,49 @@ const randomIP = () => {
   return ipString
 }
 
-ipsRouter.get('/next-ip', async (request, response) => {
+const getNextIp = () => {
   //Generoidaan satunainen IP-soite
-  const ip = randomIP()
-
+  const ipAddress = randomIP()
   //Muodostetaan tietokanta kysely
-  const query = IPs.where({ ip: ip })
+  return IPs.findOne({ ip: ipAddress }).limit(1)
+    .then(existingIp => {
+      if (existingIp) {
+        //Jos kannasta löytyy jo kyseinen osoite ajetaan koko ajetaan sama funktio uudelleen
+        return getNextIp()
+      } else {
+        //jos kannasta ei löydy kysiestä osoistetta palautetaan se
+        return ipAddress
+      }
+    })
+}
 
-  //Jos kannasta ei löydy osoitetta plautetaan generoitu IP-osoite
-  if (await query.findOne() == null) {
-    response.json({'ip' :ip})
+//Tarjotaan uutta satunnaisesti generoitua IP-Osoitetta
+ipsRouter.get('/next-ip', async (request, response) => {
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
   }
+
+  const user = await User.findById(decodedToken.id)
+  //Kutsutaan getNextIp funktiota
+  getNextIp()
+    .then(async ipAddress => {
+      //varataan IP-osoite käyttöön
+      const ip = new IPs({
+        ip: ipAddress,
+        user: user._id,
+      })
+     
+      const savedIP = await ip.save()
+    
+      user.ips = user.ips.concat(savedIP._id)
+      await user.save()
+      //Palautetaan varattu IP-osoite
+      response.status(201).json({ message: 'Uusi IP-osite luotu', ip: ipAddress })
+    })
+    .catch(error => {
+      response.status(500).json({ message: 'Internal server error' })
+    })
 })
 
 //Haetaan yksittäinen IP-osoite
