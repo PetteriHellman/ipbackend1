@@ -4,6 +4,8 @@ const IPs = require('../models/ip')
 const User = require('../models/user')
 
 const jwt = require('jsonwebtoken')
+const ipblocks = require('ip-blocks')
+
 
 const getTokenFrom = request => {
   const authorization = request.get('authorization')
@@ -44,6 +46,22 @@ ipsRouter.post('/', async (request, response) => {
   await user.save()
 
   response.status(201).json(savedIP)
+})
+
+const randomIP = () => {
+  const ipArray = ipblocks('192.168.0.1', 22, Math.floor(Math.random() * 1023))
+
+  const ipString = ipArray.join('.')
+  return ipString
+}
+
+ipsRouter.get('/next-ip', async (request, response) => {
+  const ip = randomIP()
+  const query = IPs.where({ ip: ip })
+
+  if (await query.findOne() == null) {
+    response.json(ip)
+  }
 })
 
 //Haetaan yksittäinen IP-osoite
