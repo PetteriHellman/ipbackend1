@@ -49,7 +49,7 @@ ipsRouter.post('/', async (request, response) => {
 })
 
 const randomIP = () => {
-  const ipArray = ipblocks('192.168.0.1', 22, Math.floor(Math.random() * 1023))
+  const ipArray = ipblocks('10.36.64.101', 22, Math.floor(Math.random() *(663 - 101) + 101))
 
   const ipString = ipArray.join('.')
   return ipString
