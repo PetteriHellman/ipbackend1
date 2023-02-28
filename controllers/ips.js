@@ -32,14 +32,10 @@ ipsRouter.post('/', async (request, response) => {
 
   const user = await User.findById(decodedToken.id)
 
-  //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
-  const expireDate = Date.now() + body.TTL * 86400 *1000
-
   const ip = new IPs({
     ip: body.ip,
     desc: body.desc,
     user: user._id,
-    expirationDate: expireDate
   })
  
   const savedIP = await ip.save()
