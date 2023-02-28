@@ -60,7 +60,7 @@ ipsRouter.get('/next-ip', async (request, response) => {
   const query = IPs.where({ ip: ip })
 
   if (await query.findOne() == null) {
-    response.json(ip)
+    response.json({'ip' :ip})
   }
 })
 
