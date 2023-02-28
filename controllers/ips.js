@@ -76,28 +76,35 @@ const getNextIp = () => {
 }
 
 //Tarjotaan uutta satunnaisesti generoitua IP-Osoitetta
-ipsRouter.get('/next-ip', async (request, response) => {
+ipsRouter.post('/next-ip', async (request, response) => {
+  const body = request.body
+  
+  //Tarkistetaan kirjautuminen
   const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' })
   }
 
+  //Otetaan kirjautuneen käyttäjän tiedot talteen
   const user = await User.findById(decodedToken.id)
+
   //Kutsutaan getNextIp funktiota
   getNextIp()
     .then(async ipAddress => {
+      
       //varataan IP-osoite käyttöön
       const ip = new IPs({
+        desc: body.desc,
         ip: ipAddress,
         user: user._id,
       })
      
       const savedIP = await ip.save()
-    
+
       user.ips = user.ips.concat(savedIP._id)
       await user.save()
       //Palautetaan varattu IP-osoite
-      response.status(201).json({ message: 'Uusi IP-osite luotu', ip: ipAddress })
+      response.status(201).json({message: 'Uusi IP-osoite luotu', savedIP})
     })
     .catch(error => {
       response.status(500).json({ message: 'Internal server error' })
