@@ -66,17 +66,17 @@ const getNextIp = () => {
   return IPs.findOne({ ip: ipAddress }).limit(1)
     .then(existingIp => {
       if (existingIp) {
-        //Jos kannasta löytyy jo kyseinen osoite ajetaan koko ajetaan sama funktio uudelleen
+        //Jos kannasta löytyy jo kyseinen osoite ajetaan sama funktio uudelleen
         return getNextIp()
       } else {
-        //jos kannasta ei löydy kysiestä osoistetta palautetaan se
+        //Jos kannasta ei löydy kysiestä osoistetta palautetaan se
         return ipAddress
       }
     })
 }
 
-//Tarjotaan uutta satunnaisesti generoitua IP-Osoitetta
-ipsRouter.post('/next-ip', async (request, response) => {
+//Tarjotaan uutta satunnaisesti generoitua IP-osoitetta
+ipsRouter.post('/next-ip', async (request, response, next) => {
   const body = request.body
   
   //Tarkistetaan kirjautuminen
@@ -92,13 +92,14 @@ ipsRouter.post('/next-ip', async (request, response) => {
   getNextIp()
     .then(async ipAddress => {
       
-      //varataan IP-osoite käyttöön
+      
       const ip = new IPs({
         desc: body.desc,
         ip: ipAddress,
         user: user._id,
       })
-     
+
+      //Varataan IP-osoite käyttöön
       const savedIP = await ip.save()
 
       user.ips = user.ips.concat(savedIP._id)
@@ -108,6 +109,7 @@ ipsRouter.post('/next-ip', async (request, response) => {
     })
     .catch(error => {
       response.status(500).json({ message: 'Internal server error' })
+      next(error)
     })
 })
 
