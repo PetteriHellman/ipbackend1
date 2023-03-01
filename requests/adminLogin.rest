@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/adminlogin
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc3NjcyMDUyfQ.07_o490HXLVCCrPNfDKjEbj3QCR7WKggEYRNtpcDQbk
+{
+    "email": "john@gmail.com",
+    "name": "John Doe",
+    "password": "1234",
+    "role": "admin"
+}
