@@ -2,9 +2,12 @@ const ipsRouter = require('express').Router()
 
 const IPs = require('../models/ip')
 const User = require('../models/user')
+const Network = require('../models/network')
 
 const jwt = require('jsonwebtoken')
+
 const ipblocks = require('ip-blocks')
+const ip = require('ip')
 
 
 const getTokenFrom = request => {
@@ -17,9 +20,8 @@ const getTokenFrom = request => {
 
 //haetaan kaikki IP-osoitteet
 ipsRouter.get('/', async (request, response) => {
-  const ips = await IPs
+  const ips = await IPs.find({})
   //  .find({}).populate('user', { email: 1, name: 1 })
-    .find({})
 
   response.json(ips)
 })
@@ -48,9 +50,12 @@ ipsRouter.post('/', async (request, response) => {
   response.status(201).json(savedIP)
 })
 
-const randomIP = () => {
-  //Arvotaan IP-osoite 668 osoitteesta, jossa 10.36.64.101 on ensimmäinen osoite ja 10.36.66.254 on viimeinen /22 netmaskilla
-  const ipArray = ipblocks('10.36.64.101', 22, Math.floor(Math.random() *(668 - 101) + 101))
+const randomIP = (hostMin, hostMax, network) => {
+  const countIP = ip.toLong(hostMax) - ip.toLong(hostMin)
+  console.log('count',countIP)
+  
+  //Arvotaan IP-osoite annetuilla parametreilla
+  const ipArray = ipblocks(hostMin, network, Math.floor(Math.random() * countIP))
 
   //Tehdään pisteillä erotettu stringi ipblocks:n palauttamasta arraysta
   const ipString = ipArray.join('.')
@@ -60,18 +65,24 @@ const randomIP = () => {
 }
 
 const getNextIp = () => {
-  //Generoidaan satunainen IP-soite
-  const ipAddress = randomIP()
-  //Muodostetaan tietokanta kysely
-  return IPs.findOne({ ip: ipAddress }).limit(1)
-    .then(existingIp => {
-      if (existingIp) {
-        //Jos kannasta löytyy jo kyseinen osoite ajetaan sama funktio uudelleen
-        return getNextIp()
-      } else {
-        //Jos kannasta ei löydy kysiestä osoistetta palautetaan se
-        return ipAddress
+  return Network.findOne({ networkName: 'Verkko1' }).limit(1)
+    .then(network => {
+      if (!network) {
+        throw new Error('Network not found')
       }
+
+      const ipAddress = randomIP(network.hostMin, network.hostMax, network.hostNetwork)
+
+      return IPs.findOne({ ip: ipAddress }).limit(1)
+        .then(existingIp => {
+          if (existingIp) {
+            //Jos kannasta löytyy jo kyseinen osoite ajetaan sama funktio uudelleen
+            return getNextIp()
+          } else {
+            //Jos kannasta ei löydy kysiestä osoistetta palautetaan se
+            return ipAddress
+          }
+        })
     })
 }
 
@@ -91,8 +102,7 @@ ipsRouter.post('/next-ip', async (request, response, next) => {
   //Kutsutaan getNextIp funktiota
   getNextIp()
     .then(async ipAddress => {
-      
-      
+
       const ip = new IPs({
         desc: body.desc,
         ip: ipAddress,
