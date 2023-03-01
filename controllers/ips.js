@@ -40,10 +40,15 @@ ipsRouter.post('/', async (request, response) => {
   //Etsitään käyttäjä
   const user = await User.findById(decodedToken.id)
   //Luodaan ip niminen muuttuja ja talletetaan bodyssa saadut tiedot sinne
+  
+  //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
+  const expireDate = Date.now() + body.TTL * 86400 *1000
+
   const ip = new IPs({
     ip: body.ip,
     desc: body.desc,
     user: user._id,
+    expirationDate: expireDate,
   })
   //Tallennetaan ip kantaan
   const savedIP = await ip.save()
@@ -57,13 +62,10 @@ ipsRouter.post('/', async (request, response) => {
 const randomIP = (hostMin, hostMax, network) => {
   //Lasketaan kaikkien IP-osoitteiden määrä
   const countIP = ip.toLong(hostMax) - ip.toLong(hostMin)
-  
   //Arvotaan IP-osoite annetuilla parametreilla
   const ipArray = ipblocks(hostMin, network, Math.floor(Math.random() * countIP))
-
   //Tehdään pisteillä erotettu stringi ipblocks:n palauttamasta arraysta
-  const ipString = ipArray.join('.')
-  
+  const ipString = ipArray.join('.') 
   //Palautetaan stringinä oleva ip osoite
   return ipString
 }
@@ -93,25 +95,24 @@ const getNextIp = (networkId) => {
 
 //Tarjotaan uutta satunnaisesti generoitua IP-osoitetta
 ipsRouter.post('/next-ip', async (request, response, next) => {
-  const body = request.body
-  
+  const body = request.body 
   //Tarkistetaan kirjautuminen
   const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' })
   }
-
   //Otetaan kirjautuneen käyttäjän tiedot talteen
   const user = await User.findById(decodedToken.id)
-
   //Kutsutaan getNextIp funktiota
   getNextIp(body.networkId)
     .then(async ipAddress => {
-
+      //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
+      const expireDate = Date.now() + body.TTL * 86400 *1000
       const ip = new IPs({
         desc: body.desc,
         ip: ipAddress,
         user: user._id,
+        expirationDate: expireDate,
       })
 
       //Varataan IP-osoite käyttöön
