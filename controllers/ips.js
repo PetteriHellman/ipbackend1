@@ -52,7 +52,6 @@ ipsRouter.post('/', async (request, response) => {
 
 const randomIP = (hostMin, hostMax, network) => {
   const countIP = ip.toLong(hostMax) - ip.toLong(hostMin)
-  console.log('count',countIP)
   
   //Arvotaan IP-osoite annetuilla parametreilla
   const ipArray = ipblocks(hostMin, network, Math.floor(Math.random() * countIP))
