@@ -29,5 +29,5 @@ networkSchema.set('toJSON', {
   }
 })
 
-const Network = mongoose.model('networkSchema', networkSchema)
+const Network = mongoose.model('network', networkSchema)
 module.exports = Network

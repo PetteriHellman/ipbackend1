@@ -64,8 +64,8 @@ const randomIP = (hostMin, hostMax, network) => {
   return ipString
 }
 
-const getNextIp = () => {
-  return Network.findOne({ networkName: 'Verkko1' }).limit(1)
+const getNextIp = (networkId) => {
+  return Network.findById(networkId)
     .then(network => {
       if (!network) {
         throw new Error('Network not found')
@@ -79,7 +79,7 @@ const getNextIp = () => {
             //Jos kannasta löytyy jo kyseinen osoite ajetaan sama funktio uudelleen
             return getNextIp()
           } else {
-            //Jos kannasta ei löydy kysiestä osoistetta palautetaan se
+            //Jos kannasta ei löydy kyseistä osoistetta palautetaan se
             return ipAddress
           }
         })
@@ -100,7 +100,7 @@ ipsRouter.post('/next-ip', async (request, response, next) => {
   const user = await User.findById(decodedToken.id)
 
   //Kutsutaan getNextIp funktiota
-  getNextIp()
+  getNextIp(body.networkId)
     .then(async ipAddress => {
 
       const ip = new IPs({
