@@ -12,6 +12,7 @@ const adminAuth = (request, response, next) => {
       return response.status(401).json({ error: 'unauthorized' })
     }
     request.decodedToken = decodedToken
+    console.log(decodedToken)
     next()
   } catch (error) {
     return response.status(401).json({ error: 'missing or invalid token' })
