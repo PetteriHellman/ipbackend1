@@ -28,29 +28,34 @@ ipsRouter.get('/', async (request, response) => {
 
 //tallennetaan ip osoite
 ipsRouter.post('/', async (request, response) => {
+  //Tallennetaan pyynnön body muuttujaan
   const body = request.body
+
+  //Tarkistetaan kirjautuminen
   const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' })
   }
 
+  //Etsitään käyttäjä
   const user = await User.findById(decodedToken.id)
-
+  //Luodaan ip niminen muuttuja ja talletetaan bodyssa saadut tiedot sinne
   const ip = new IPs({
     ip: body.ip,
     desc: body.desc,
     user: user._id,
   })
- 
+  //Tallennetaan ip kantaan
   const savedIP = await ip.save()
-
+  //Tallennetaan käyttäjän tietoihin tallenetun IP:n id
   user.ips = user.ips.concat(savedIP._id)
   await user.save()
-
+  //Palautetaan tallennettu IP
   response.status(201).json(savedIP)
 })
 
 const randomIP = (hostMin, hostMax, network) => {
+  //Lasketaan kaikkien IP-osoitteiden määrä
   const countIP = ip.toLong(hostMax) - ip.toLong(hostMin)
   
   //Arvotaan IP-osoite annetuilla parametreilla
@@ -64,14 +69,15 @@ const randomIP = (hostMin, hostMax, network) => {
 }
 
 const getNextIp = (networkId) => {
+  //Etsitään verkkon tiedot kannasta
   return Network.findById(networkId)
     .then(network => {
       if (!network) {
         throw new Error('Network not found')
       }
-
+      //Luodaan satunnainen IP-osoite
       const ipAddress = randomIP(network.hostMin, network.hostMax, network.hostNetwork)
-
+      //Etsitään kannasta että löytyykö juuri luotu IP
       return IPs.findOne({ ip: ipAddress }).limit(1)
         .then(existingIp => {
           if (existingIp) {
