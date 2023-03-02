@@ -45,10 +45,4 @@ app.use(middleware.errorHandler)
 
 const jwt = require('jsonwebtoken');
 
-//Dummy auth key gen
-// const secret = '1234';
-// const payload = { email: 'john@gmail.com', role: 'admin' };
-// const token = jwt.sign(payload, secret);
-// console.log(token);
-
 module.exports = app
