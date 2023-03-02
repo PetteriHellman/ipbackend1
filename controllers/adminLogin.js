@@ -2,9 +2,8 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const adminloginRouter = require('express').Router()
 const User = require('../models/user')
-const adminAuth = require('../utils/adminAuth')
 
-adminloginRouter.post('/', adminAuth, async (request, response) => {
+adminloginRouter.post('/', async (request, response) => {
   const { email, password } = request.body
 
   const user = await User.findOne({ email })

@@ -1,5 +1,4 @@
 POST http://localhost:3001/api/adminlogin
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc3Njc1NDAxfQ.WZW4BUFSx-0G_sPHp2YJbHz0s8OFBfnRH46TyYiGioE
 Content-Type: application/json
 
 {
