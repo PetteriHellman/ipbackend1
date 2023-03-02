@@ -40,9 +40,9 @@ ipsRouter.post('/', async (request, response) => {
   //Etsitään käyttäjä
   const user = await User.findById(decodedToken.id)
   //Luodaan ip niminen muuttuja ja talletetaan bodyssa saadut tiedot sinne
-  
+
   //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
-  const expireDate = Date.now() + body.TTL * 86400 *1000
+  const expireDate = Date.now() + body.TTL * 86400 * 1000
 
   const ip = new IPs({
     ip: body.ip,
@@ -65,7 +65,7 @@ const randomIP = (hostMin, hostMax, network) => {
   //Arvotaan IP-osoite annetuilla parametreilla
   const ipArray = ipblocks(hostMin, network, Math.floor(Math.random() * countIP))
   //Tehdään pisteillä erotettu stringi ipblocks:n palauttamasta arraysta
-  const ipString = ipArray.join('.') 
+  const ipString = ipArray.join('.')
   //Palautetaan stringinä oleva ip osoite
   return ipString
 }
@@ -95,7 +95,7 @@ const getNextIp = (networkId) => {
 
 //Tarjotaan uutta satunnaisesti generoitua IP-osoitetta
 ipsRouter.post('/next-ip', async (request, response, next) => {
-  const body = request.body 
+  const body = request.body
   //Tarkistetaan kirjautuminen
   const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
   if (!decodedToken.id) {
@@ -107,7 +107,7 @@ ipsRouter.post('/next-ip', async (request, response, next) => {
   getNextIp(body.networkId)
     .then(async ipAddress => {
       //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
-      const expireDate = Date.now() + body.TTL * 86400 *1000
+      const expireDate = Date.now() + body.TTL * 86400 * 1000
       const ip = new IPs({
         desc: body.desc,
         ip: ipAddress,
@@ -121,7 +121,7 @@ ipsRouter.post('/next-ip', async (request, response, next) => {
       user.ips = user.ips.concat(savedIP._id)
       await user.save()
       //Palautetaan varattu IP-osoite
-      response.status(201).json({message: 'Uusi IP-osoite luotu', savedIP})
+      response.status(201).json({ message: 'Uusi IP-osoite luotu', savedIP })
     })
     .catch(error => {
       response.status(500).json({ message: 'Internal server error' })
@@ -146,12 +146,20 @@ ipsRouter.delete('/:id', async (request, response) => {
 })
 
 //Muokataan IP-osoitetta ja/tai kuvausta
-ipsRouter.put('/:id', (request, response, next) => {
+ipsRouter.put('/:id', async (request, response, next) => {
+  //Tarkistetaan kirjautuminen
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+  //Otetaan kirjautuneen käyttäjän tiedot talteen
+  const user = await User.findById(decodedToken.id)
   const body = request.body
 
   const ip = {
     ip: body.ip,
     desc: body.desc,
+    user: user._id,
   }
 
   IPs.findByIdAndUpdate(request.params.id, ip, { new: true })
