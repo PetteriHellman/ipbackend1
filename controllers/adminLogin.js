@@ -5,7 +5,7 @@ const User = require('../models/user')
 const adminAuth = require('../utils/adminAuth')
 
 adminloginRouter.post('/', adminAuth, async (request, response) => {
-  const { email, password, role } = request.body
+  const { email, password } = request.body
 
   const user = await User.findOne({ email })
   const passwordCorrect = user === null
