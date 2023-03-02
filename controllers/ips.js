@@ -4,19 +4,21 @@ const IPs = require('../models/ip')
 const User = require('../models/user')
 const Network = require('../models/network')
 
-const jwt = require('jsonwebtoken')
+const userAuth = require('../utils/userAuth')
+
+//const jwt = require('jsonwebtoken')
 
 const ipblocks = require('ip-blocks')
 const ip = require('ip')
 
 
-const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '')
-  }
-  return null
-}
+// const getTokenFrom = request => {
+//   const authorization = request.get('authorization')
+//   if (authorization && authorization.startsWith('Bearer ')) {
+//     return authorization.replace('Bearer ', '')
+//   }
+//   return null
+// }
 
 //haetaan kaikki IP-osoitteet
 ipsRouter.get('/', async (request, response) => {
@@ -27,19 +29,11 @@ ipsRouter.get('/', async (request, response) => {
 })
 
 //tallennetaan ip osoite
-ipsRouter.post('/', async (request, response) => {
+ipsRouter.post('/',userAuth, async (request, response) => {
   //Tallennetaan pyynnön body muuttujaan
   const body = request.body
 
-  //Tarkistetaan kirjautuminen
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-
-  //Etsitään käyttäjä
-  const user = await User.findById(decodedToken.id)
-  //Luodaan ip niminen muuttuja ja talletetaan bodyssa saadut tiedot sinne
+  const user = await User.findById(request.decodedToken.id)
 
   //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
   const expireDate = Date.now() + body.TTL * 86400 * 1000
@@ -94,15 +88,11 @@ const getNextIp = (networkId) => {
 }
 
 //Tarjotaan uutta satunnaisesti generoitua IP-osoitetta
-ipsRouter.post('/next-ip', async (request, response, next) => {
+ipsRouter.post('/next-ip',userAuth, async (request, response, next) => {
   const body = request.body
-  //Tarkistetaan kirjautuminen
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
+  
   //Otetaan kirjautuneen käyttäjän tiedot talteen
-  const user = await User.findById(decodedToken.id)
+  const user = await User.findById(request.decodedToken.id)
   //Kutsutaan getNextIp funktiota
   getNextIp(body.networkId)
     .then(async ipAddress => {
@@ -114,7 +104,6 @@ ipsRouter.post('/next-ip', async (request, response, next) => {
         user: user._id,
         expirationDate: expireDate,
       })
-
       //Varataan IP-osoite käyttöön
       const savedIP = await ip.save()
 
@@ -146,15 +135,10 @@ ipsRouter.delete('/:id', async (request, response) => {
 })
 
 //Muokataan IP-osoitetta ja/tai kuvausta
-ipsRouter.put('/:id', async (request, response, next) => {
-  //Tarkistetaan kirjautuminen
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-  //Otetaan kirjautuneen käyttäjän tiedot talteen
-  const user = await User.findById(decodedToken.id)
+ipsRouter.put('/:id',userAuth, async (request, response, next) => {
   const body = request.body
+  //Otetaan kirjautuneen käyttäjän tiedot talteen
+  const user = await User.findById(request.decodedToken.id)
 
   const ip = {
     ip: body.ip,
