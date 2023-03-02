@@ -11,6 +11,8 @@ const usersRouter = require('./controllers/users')
 const middleware = require('./utils/middleware')
 const passRouter = require('./controllers/passwordChange')
 const loginRouter = require('./controllers/login')
+const adminCreateRouter = require('./controllers/adminCreate')
+const adminloginRouter = require('./controllers/adminLogin')
 const networkRouter = require('./controllers/network')
 
 mongoose.set('strictQuery', false)
@@ -34,9 +36,13 @@ app.use('/api/ips', ipsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api', passRouter)
 app.use('/api/login', loginRouter)
+app.use('/api/adminCreate', adminCreateRouter)
+app.use('/api/adminlogin', adminloginRouter)
 app.use('/api/admin/network', networkRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
+
+const jwt = require('jsonwebtoken');
 
 module.exports = app
