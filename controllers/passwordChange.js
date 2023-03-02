@@ -3,17 +3,34 @@ const passRouter = express.Router()
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
 
-passRouter.post('/users/:id/change-password', async (req, res, next) => {
-  const { oldPassword, newPassword } = req.body
+const jwt = require('jsonwebtoken')
+
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '')
+  }
+  return null
+}
+
+passRouter.post('/', async (request, response, next) => {
+  //Tarkistetaan kirjautuminen
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+  
+  const { oldPassword, newPassword } = request.body
   try {
-    const user = await User.findById(req.params.id)
+    //Otetaan kirjautuneen käyttäjän tiedot talteen
+    const user = await User.findById(decodedToken.id)
     if (!user) {
-      return res.status(404).json({ error: 'User not found' })
+      return response.status(404).json({ error: 'User not found' })
     }
 
     const isMatch = await bcrypt.compare(oldPassword, user.passwordHash)
     if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid password' })
+      return response.status(401).json({ error: 'Invalid password' })
       
     }
     
@@ -23,11 +40,11 @@ passRouter.post('/users/:id/change-password', async (req, res, next) => {
     user.passwordHash = hashedPassword
     await user.save()
 
-    res.status(200).json({ message: 'Password updated successfully' })
+    response.status(200).json({ message: 'Password updated successfully' })
     
   } catch (error) {
     next(error)
-    res.status(500).json({ error: 'Internal server error' })
+    response.status(500).json({ error: 'Internal server error' })
   }
 })
 

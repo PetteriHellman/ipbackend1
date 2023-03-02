@@ -25,7 +25,7 @@ adminloginRouter.post('/', adminAuth, async (request, response) => {
   }
   //expiration of token in an hour
   const token = jwt.sign(adminForToken, process.env.ADMIN_SECRET,
-  { expiresIn: 60*60 })
+    { expiresIn: 60*60 })
 
   response
     .status(200)

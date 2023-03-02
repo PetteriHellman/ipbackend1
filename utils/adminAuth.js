@@ -19,4 +19,4 @@ const adminAuth = (request, response, next) => {
   }
 }
 
-module.exports = adminAuth;
+module.exports = adminAuth
