@@ -12,13 +12,14 @@ const rl = readline.createInterface({
   output: process.stdout
 })
 
-mongoose.connect(config.MONGODB_URI)
-  .then(() => {
+const connectToDatabase = async () => {
+  try {
+    await mongoose.connect(config.MONGODB_URI)
     logger.info('connected to MongoDB')
-  })
-  .catch((error) => {
+  } catch (error) {
     logger.error('error connecting to MongoDB:', error.message)
-  })
+  }
+}
 
 
 // create a new admin user with the given email, name and password
@@ -42,12 +43,14 @@ const createDefaultUser = async (email, name, passwordHash) => {
 }
 
 // Ask the user for input and create a new admin user
-rl.question('Enter admin email: ', (email) => {
-  rl.question('Enter admin name: ', (name) => {
-    rl.question('Enter admin password: ', async (password) => {
-      await createDefaultUser(email, name, password)
-      rl.close()
-      await mongoose.disconnect()
+connectToDatabase().then(() => {
+  rl.question('Enter admin email: ', async (email) => {
+    await rl.question('Enter admin name: ', async (name) => {
+      await rl.question('Enter admin password: ', async (password) => {
+        await createDefaultUser(email, name, password)
+        rl.close()
+        await mongoose.disconnect()
+      })
     })
   })
 })
