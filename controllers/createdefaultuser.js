@@ -7,6 +7,11 @@ const User = require('../models/user')
 
 mongoose.set('strictQuery', true);
 
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
   mongoose.connect(config.MONGODB_URI)
   .then(() => {
     logger.info('connected to MongoDB')
@@ -14,11 +19,7 @@ mongoose.set('strictQuery', true);
   .catch((error) => {
     logger.error('error connecting to MongoDB:', error.message)
   })
-
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });  
+  
 
 // create a new admin user with the given email, name and password
 const createDefaultUser = async (email, name, passwordHash) => {
