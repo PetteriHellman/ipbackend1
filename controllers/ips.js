@@ -5,23 +5,13 @@ const User = require('../models/user')
 const Network = require('../models/network')
 
 const userAuth = require('../utils/userAuth')
-
-//const jwt = require('jsonwebtoken')
+const adminAuth = require('../utils/adminAuth')
 
 const ipblocks = require('ip-blocks')
 const ip = require('ip')
 
-
-// const getTokenFrom = request => {
-//   const authorization = request.get('authorization')
-//   if (authorization && authorization.startsWith('Bearer ')) {
-//     return authorization.replace('Bearer ', '')
-//   }
-//   return null
-// }
-
 //haetaan kaikki IP-osoitteet
-ipsRouter.get('/', async (request, response) => {
+ipsRouter.get('/',adminAuth, async (request, response) => {
   const ips = await IPs.find({})
   //  .find({}).populate('user', { email: 1, name: 1 })
 
@@ -143,7 +133,7 @@ ipsRouter.put('/next-ip/:id',userAuth, async (request, response, next) => {
 })
 
 //Haetaan yksittäinen IP-osoite
-ipsRouter.get('/:id', async (request, response) => {
+ipsRouter.get('/:id',userAuth, async (request, response) => {
   const ip = await IPs.findById(request.params.id)
   if (ip) {
     response.json(ip)
@@ -153,7 +143,7 @@ ipsRouter.get('/:id', async (request, response) => {
 })
 
 //Poistetaan IP-osoite
-ipsRouter.delete('/:id', async (request, response) => {
+ipsRouter.delete('/:id',userAuth, async (request, response) => {
   await IPs.findByIdAndRemove(request.params.id)
   response.status(204).end()
 })
