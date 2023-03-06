@@ -1,9 +1,8 @@
-POST http://localhost:3001/api/ips/
+POST http://localhost:3001/api/ips/next-ip
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2NDA1OWFjMzkyMjhmMzA4ZjQ0YjU0NWYiLCJpYXQiOjE2NzgwODk3MzMsImV4cCI6MTY3ODA5MzMzM30.QA-zs1IUTmJ7z-JPMUCGHbvlJz11w4yXNJxD9l_XQfo
 
 {
-  "ip" : "192.168.0.2",
-  "desc" : "Testi",
-  "TTL" : 1
+  "desc" : "Kuvaus 2",
+  "networkId" : "63ff3ad4366b395e4d9b742f"
 }

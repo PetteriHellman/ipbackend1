@@ -96,8 +96,9 @@ ipsRouter.post('/next-ip',userAuth, async (request, response, next) => {
   //Kutsutaan getNextIp funktiota
   getNextIp(body.networkId)
     .then(async ipAddress => {
-      //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
-      const expireDate = Date.now() + body.TTL * 86400 * 1000
+      //const expireDate = Date.now() + body.TTL * 86400 * 1000
+      //Asetetaan aika ensiksi 10 minuutiksi ja päivitetään oikea aika sitten vasta kun käyttäjä hyväksyy IP:n
+      const expireDate = Date.now() + 600 * 1000
       const ip = new IPs({
         desc: body.desc,
         ip: ipAddress,
@@ -116,6 +117,29 @@ ipsRouter.post('/next-ip',userAuth, async (request, response, next) => {
       response.status(500).json({ message: 'Internal server error' })
       next(error)
     })
+})
+
+//Muokataan IP-osoitetta ja/tai kuvausta
+ipsRouter.put('/next-ip/:id',userAuth, async (request, response, next) => {
+  const body = request.body
+  //Otetaan kirjautuneen käyttäjän tiedot talteen
+  const user = await User.findById(request.decodedToken.id)
+  
+  //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
+  const expireDate = Date.now() + body.TTL * 86400 * 1000
+
+  const ip = {
+    ip: body.ip,
+    desc: body.desc,
+    user: user._id,
+    expirationDate: expireDate,
+  }
+
+  IPs.findByIdAndUpdate(request.params.id, ip, { new: true })
+    .then(updatedIP => {
+      response.json(updatedIP)
+    })
+    .catch(error => next(error))
 })
 
 //Haetaan yksittäinen IP-osoite
