@@ -22,7 +22,7 @@ usersRouter.post('/', async (request, response) => {
 
 usersRouter.get('/', async (request, response) => {
   const users = await User
-    .find({}).populate('ips', { ip: 1, desc: 1 })
+    .find({}).populate('ips', { ip: 1, desc: 1, expirationDate: 1, createdAt: 1 })
   response.json(users)
 })
 
