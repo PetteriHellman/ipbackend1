@@ -14,8 +14,20 @@ const getTokenFrom = request => {
 }
 
 passRouter.post('/', async (request, response, next) => {
-  //Tarkistetaan kirjautuminen
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  // Tarkistetaan kirjautuminen
+  const token = getTokenFrom(request)
+  let decodedToken
+
+  try {
+    decodedToken = jwt.verify(token, process.env.SECRET)
+  } catch (error) {
+    try {
+      decodedToken = jwt.verify(token, process.env.ADMIN_SECRET)
+    } catch (error) {
+      return response.status(401).json({ error: 'token invalid' })
+    }
+  }
+
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' })
   }
