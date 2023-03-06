@@ -5,23 +5,13 @@ const User = require('../models/user')
 const Network = require('../models/network')
 
 const userAuth = require('../utils/userAuth')
-
-//const jwt = require('jsonwebtoken')
+const adminAuth = require('../utils/adminAuth')
 
 const ipblocks = require('ip-blocks')
 const ip = require('ip')
 
-
-// const getTokenFrom = request => {
-//   const authorization = request.get('authorization')
-//   if (authorization && authorization.startsWith('Bearer ')) {
-//     return authorization.replace('Bearer ', '')
-//   }
-//   return null
-// }
-
 //haetaan kaikki IP-osoitteet
-ipsRouter.get('/', async (request, response) => {
+ipsRouter.get('/',adminAuth, async (request, response) => {
   const ips = await IPs.find({})
   //  .find({}).populate('user', { email: 1, name: 1 })
 
@@ -96,8 +86,9 @@ ipsRouter.post('/next-ip',userAuth, async (request, response, next) => {
   //Kutsutaan getNextIp funktiota
   getNextIp(body.networkId)
     .then(async ipAddress => {
-      //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
-      const expireDate = Date.now() + body.TTL * 86400 * 1000
+      //const expireDate = Date.now() + body.TTL * 86400 * 1000
+      //Asetetaan aika ensiksi 10 minuutiksi ja päivitetään oikea aika sitten vasta kun käyttäjä hyväksyy IP:n
+      const expireDate = Date.now() + 600 * 1000
       const ip = new IPs({
         desc: body.desc,
         ip: ipAddress,
@@ -118,8 +109,31 @@ ipsRouter.post('/next-ip',userAuth, async (request, response, next) => {
     })
 })
 
+//Muokataan IP-osoitetta ja/tai kuvausta
+ipsRouter.put('/next-ip/:id',userAuth, async (request, response, next) => {
+  const body = request.body
+  //Otetaan kirjautuneen käyttäjän tiedot talteen
+  const user = await User.findById(request.decodedToken.id)
+  
+  //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
+  const expireDate = Date.now() + body.TTL * 86400 * 1000
+
+  const ip = {
+    ip: body.ip,
+    desc: body.desc,
+    user: user._id,
+    expirationDate: expireDate,
+  }
+
+  IPs.findByIdAndUpdate(request.params.id, ip, { new: true })
+    .then(updatedIP => {
+      response.json(updatedIP)
+    })
+    .catch(error => next(error))
+})
+
 //Haetaan yksittäinen IP-osoite
-ipsRouter.get('/:id', async (request, response) => {
+ipsRouter.get('/:id',userAuth, async (request, response) => {
   const ip = await IPs.findById(request.params.id)
   if (ip) {
     response.json(ip)
@@ -129,7 +143,7 @@ ipsRouter.get('/:id', async (request, response) => {
 })
 
 //Poistetaan IP-osoite
-ipsRouter.delete('/:id', async (request, response) => {
+ipsRouter.delete('/:id',userAuth, async (request, response) => {
   await IPs.findByIdAndRemove(request.params.id)
   response.status(204).end()
 })
