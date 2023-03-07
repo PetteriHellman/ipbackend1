@@ -16,11 +16,27 @@ const connectToDatabase = async () => {
   try {
     await mongoose.connect(config.MONGODB_URI)
     logger.info('connected to MongoDB')
+
+    const numUsers = await User.countDocuments()
+    if (numUsers > 0) {
+      logger.error('There are already users in the database, skipping admin user creation')
+      await mongoose.disconnect()
+      process.exit()
+    }
+
+    rl.question('Enter admin email: ', async (email) => {
+      await rl.question('Enter admin name: ', async (name) => {
+        await rl.question('Enter admin password: ', async (password) => {
+          await createDefaultUser(email, name, password)
+          rl.close()
+          await mongoose.disconnect()
+        })
+      })
+    })
   } catch (error) {
     logger.error('error connecting to MongoDB:', error.message)
   }
 }
-
 
 // create a new admin user with the given email, name and password
 const createDefaultUser = async (email, name, passwordHash) => {
@@ -42,15 +58,4 @@ const createDefaultUser = async (email, name, passwordHash) => {
   }
 }
 
-// Ask the user for input and create a new admin user
-connectToDatabase().then(() => {
-  rl.question('Enter admin email: ', async (email) => {
-    await rl.question('Enter admin name: ', async (name) => {
-      await rl.question('Enter admin password: ', async (password) => {
-        await createDefaultUser(email, name, password)
-        rl.close()
-        await mongoose.disconnect()
-      })
-    })
-  })
-})
+connectToDatabase()
