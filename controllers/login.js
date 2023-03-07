@@ -20,6 +20,7 @@ loginRouter.post('/', async (request, response) => {
   const userForToken = {
     email: user.email,
     id: user._id,
+    role: user.role
   }
   //expiration of token in an hour
   const token = jwt.sign(userForToken, process.env.SECRET,
