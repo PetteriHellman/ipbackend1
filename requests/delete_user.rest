@@ -1,2 +1,2 @@
-GET http://localhost:3001/api/users/
+DELETE http://localhost:3001/api/users/64059ac39228f308f44b545f
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlkIjoiNjQwNmVlNjdmOWE0MjAzNzBkN2IzMTNjIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4MTc3MzMxLCJleHAiOjE2NzgxODA5MzF9.LwZvLiRWBFu-YsLshMi_HLXUEDqwhwvnOe3sBl7dsUA
