@@ -26,17 +26,17 @@ const connectToDatabase = async () => {
       process.exit()
     }
     //Luodaan User malllin mukainen collection
-    User.createCollection()
+    await User.createCollection()
       .then(collection => {
         logger.info('User collection is created!')
       })
     //Luodaan IPs malllin mukainen collection
-    IPs.createCollection()
+    await IPs.createCollection()
       .then(collection => {
         logger.info('IPs collection is created!')
       })
     //Luodaan Network malllin mukainen collection
-    Network.createCollection()
+    await Network.createCollection()
       .then(collection => {
         logger.info('Network collection is created!')
       })
