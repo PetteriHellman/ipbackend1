@@ -109,7 +109,7 @@ ipsRouter.post('/next-ip',userAuth, async (request, response, next) => {
     })
 })
 
-
+//Vahvistetaan automaattisesti generoitu IP oikealla vanhenemisajalla
 ipsRouter.put('/next-ip/:id',userAuth, async (request, response, next) => {
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen
