@@ -1,8 +1,8 @@
 POST http://localhost:3001/api/ips/next-ip
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2NDA1OWFjMzkyMjhmMzA4ZjQ0YjU0NWYiLCJpYXQiOjE2NzgwODk3MzMsImV4cCI6MTY3ODA5MzMzM30.QA-zs1IUTmJ7z-JPMUCGHbvlJz11w4yXNJxD9l_XQfo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2NDA4NDRjNDM1YTBhN2Q2YWM1MGY4ODkiLCJyb2xlIjoidXNlciIsImlhdCI6MTY3ODI2MzUxMSwiZXhwIjoxNjc4MjY3MTExfQ.au5ow4G-sVHS3PVrD6GHCDANpFavs1R4SFNypEQxMDQ
 
 {
-  "desc" : "Kuvaus 2",
+  "desc" : "Kuvaus 1",
   "networkId" : "63ff3ad4366b395e4d9b742f"
 }

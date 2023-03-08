@@ -8,9 +8,9 @@ const userAuth = (request, response, next) => {
   const token = authHeader.substring(7)
   try {
     const decodedToken = jwt.verify(token, process.env.SECRET)
-    // if (decodedToken.role !== 'user') {
-    //   return response.status(401).json({ error: 'unauthorized' })
-    // }
+    if (decodedToken.role !== 'user') {
+      return response.status(401).json({ error: 'unauthorized' })
+    }
     request.decodedToken = decodedToken
     next()
   } catch (error) {
