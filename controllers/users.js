@@ -30,11 +30,12 @@ usersRouter.get('/',adminAuth, async (request, response) => {
 
 //Poistetaan käyttäjä
 usersRouter.delete('/:id',adminAuth, async (request, response) => {
-  const user = request.params.id
+  const userId = request.params.id
   //poistetaan IP-taulusta kyseisen käyttäjän kaikki IP:t
+  await IPs.deleteMany({user: userId})
   
   //poistetaan itse käyttäjä
-//  await User.deleteOne({id: user})
+  await User.findByIdAndRemove(userId)
   response.status(204).end()
 })
 
