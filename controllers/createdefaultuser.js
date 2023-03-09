@@ -31,9 +31,7 @@ const connectToDatabase = async () => {
     logger.error('error connecting to MongoDB:', error.message)
   }
   const numUsers = await User.countDocuments()
-  console.log(numUsers)
   const numNetworks = await Network.countDocuments()
-  console.log('numNetworks', numNetworks)
 
   if (numNetworks === 0 || numUsers === 0) {
     //Luodaan User mallin mukainen collection
