@@ -25,17 +25,17 @@ const connectToDatabase = async () => {
       await mongoose.disconnect()
       process.exit()
     }
-    //Luodaan User malllin mukainen collection
+    //Luodaan User mallin mukainen collection
     await User.createCollection()
       .then(collection => {
         logger.info('User collection is created!')
       })
-    //Luodaan IPs malllin mukainen collection
+    //Luodaan IPs mallin mukainen collection
     await IPs.createCollection()
       .then(collection => {
         logger.info('IPs collection is created!')
       })
-    //Luodaan Network malllin mukainen collection
+    //Luodaan Network mallin mukainen collection
     await Network.createCollection()
       .then(collection => {
         logger.info('Network collection is created!')
