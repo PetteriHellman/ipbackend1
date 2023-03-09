@@ -1,9 +1,9 @@
 const networkRouter = require('express').Router()
 const Network = require('../models/network')
-const adminAuth = require('../utils/adminAuth')
+const auth = require('../utils/auth')
 
 //tallennetaan verkko
-networkRouter.post('/',adminAuth, async (request, response) => {
+networkRouter.post('/',auth, async (request, response) => {
   const body = request.body
   
   const network = new Network({
@@ -18,7 +18,7 @@ networkRouter.post('/',adminAuth, async (request, response) => {
   response.status(201).json(savedNetwork)
 })
 
-networkRouter.get('/',adminAuth, async (request, response) => {
+networkRouter.get('/',auth, async (request, response) => {
   const network = await Network
     .find({})
 
