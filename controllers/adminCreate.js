@@ -1,40 +1,32 @@
-const bcrypt = require('bcrypt')
-const adminCreateRouter = require('express').Router()
-const User = require('../models/user')
-const adminAuth = require('../utils/adminAuth')
+// const bcrypt = require('bcrypt')
+// const adminCreateRouter = require('express').Router()
+// const User = require('../models/user')
+// const auth = require('../utils/auth')
 
-// Create a new user with token authentication
-adminCreateRouter.post('/', adminAuth, async (request, response) => {
-  const { email, name, password, role } = request.body
+// // Create a new user with token authentication
+// adminCreateRouter.post('/', auth, async (request, response) => {
+//   const { email, name, password, role } = request.body
 
-  const saltRounds = 10
-  const passwordHash = await bcrypt.hash(password, saltRounds)
+//   const saltRounds = 10
+//   const passwordHash = await bcrypt.hash(password, saltRounds)
 
-  let secret = process.env.SECRET
-  if (role == 'admin') {
-    secret = process.env.ADMIN_SECRET
-  } else {
-    // eslint-disable-next-line no-unused-vars
-    secret = process.env.SECRET
-  }
+//   const user = new User({
+//     email,
+//     name,
+//     passwordHash,
+//     role
+//   })
 
-  const user = new User({
-    email,
-    name,
-    passwordHash,
-    role
-  })
+//   const savedUser = await user.save()
 
-  const savedUser = await user.save()
+//   response.status(201).json(savedUser)
+// })
 
-  response.status(201).json(savedUser)
-})
+// // Get all users with token authentication
+// adminCreateRouter.get('/', auth, async (request, response) => {
+//   const users = await User
+//     .find({}).populate('ips', { ip: 1, desc: 1 })
+//   response.json(users)
+// })
 
-// Get all users with token authentication
-adminCreateRouter.get('/', adminAuth, async (request, response) => {
-  const users = await User
-    .find({}).populate('ips', { ip: 1, desc: 1 })
-  response.json(users)
-})
-
-module.exports = adminCreateRouter
+// module.exports = adminCreateRouter

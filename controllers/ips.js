@@ -5,20 +5,23 @@ const User = require('../models/user')
 const Network = require('../models/network')
 
 const userAuth = require('../utils/userAuth')
-const adminAuth = require('../utils/adminAuth')
+const auth = require('../utils/auth')
 
 const ipblocks = require('ip-blocks')
 const ip = require('ip')
 
-//haetaan kaikki IP-osoitteet
-ipsRouter.get('/',adminAuth, async (request, response) => {
-  const ips = await IPs.find({})
-  //  .find({}).populate('user', { email: 1, name: 1 })
-
-  response.json(ips)
+//haetaan kaikki IP-osoitteet adminille
+ipsRouter.get('/', auth, async (request, response) => {
+  const decodedToken = request.decodedToken
+  if (decodedToken.role === 'admin') {
+    const ips = await IPs.find({})
+    response.json(ips)
+  } else {
+    return response.status(401).json({ error: 'unauthorized' })
+  }
 })
 
-//tallennetaan ip osoite
+//tallennetaan ip osoite adminille
 ipsRouter.post('/',userAuth, async (request, response) => {
   //Tallennetaan pyynnön body muuttujaan
   const body = request.body

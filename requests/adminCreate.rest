@@ -1,9 +1,9 @@
 POST http://localhost:3001/api/adminCreate
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5BQGdtYWlsLmNvbSIsImlkIjoiNjQwOTk0OTA5MDRhYjA3MjhkNWM0MDM2Iiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4MzQ5NDY0LCJleHAiOjE2NzgzNTMwNjR9.ExIp-BYhT1QitLYccje-7bJ3ptPWIwA1SOdCb6BYY3Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlkIjoiNjQwOTkxYTcxY2YzNmU3YTdjYTA2YmU1Iiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4MzU5ODQwLCJleHAiOjE2NzgzNjM0NDB9.V3NbpBG2IJSArQYr_gaJ9-NzFpkzXpVIHD8LYeGxLa4
 
 {
-    "email": "johnB@gmail.com",
+    "email": "johnD@gmail.com",
     "name": "Johnny Boy",
     "password": "1",
     "role": "admin"
