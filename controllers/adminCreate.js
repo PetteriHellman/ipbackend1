@@ -10,6 +10,14 @@ adminCreateRouter.post('/', adminAuth, async (request, response) => {
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)
 
+  let secret = process.env.SECRET
+  if (role == 'admin') {
+    secret = process.env.ADMIN_SECRET
+  } else {
+    // eslint-disable-next-line no-unused-vars
+    secret = process.env.SECRET
+  }
+
   const user = new User({
     email,
     name,
