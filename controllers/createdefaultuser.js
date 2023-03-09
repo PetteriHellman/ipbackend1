@@ -38,21 +38,21 @@ const connectToDatabase = async () => {
   if (numNetworks === 0 || numUsers === 0) {
     //Luodaan User mallin mukainen collection
     await User.createCollection()
-      .then(collection => {
+      .then(function () {
         logger.info('User collection is created!')
       })
     //Luodaan IPs mallin mukainen collection
     await IPs.createCollection()
-      .then(collection => {
+      .then(function () {
         logger.info('IPs collection is created!')
       })
     //Luodaan Network mallin mukainen collection
     await Network.createCollection()
-      .then(collection => {
+      .then(function () {
         logger.info('Network collection is created!')
       })
     if (numUsers > 0) {
-      logger.error('There are already users in the database, skipping admin user creation')
+      logger.error('There are already user(s) in the database, skipping admin user creation')
     }
     else {
       info.email = await question(prompt('Enter admin email: '))
@@ -67,19 +67,16 @@ const connectToDatabase = async () => {
       info.networkName = await question(prompt('Enter network name for randomip pool: '))
       info.hostMin = await question(prompt('Enter hostmin ip-address for randomip pool: '))
       info.hostMax = await question(prompt('Enter hostmax ip-address for randomip pool: '))
-      info.hostNetwork = await question(prompt('Enter network without / mark (example 22 or 24) for randomip pool: '))
+      info.hostNetwork = await question(prompt('Enter subnet without / mark (example 22 or 24) for randomip pool: '))
       await createDefaultNetwork(info.networkName, info.hostMin, info.hostMax, info.hostNetwork)
     }
-    
-    
-    
     rl.close()
   }
   else {
-    logger.error('There are already users and network in the database, skipping admin user and network creation')
+    logger.error('There are already user(s) and network(s) in the database, skipping admin user and network creation')
     await mongoose.disconnect()
     process.exit()
-    
+
   }
   await mongoose.disconnect()
 }
