@@ -23,6 +23,10 @@ usersRouter.post('/', async (request, response) => {
 })
 
 usersRouter.get('/',auth, async (request, response) => {
+  const decodedToken = request.decodedToken
+  if (decodedToken.role !== 'admin') {
+    return response.status(401).json({ error: 'unauthorized' })
+  }
   const users = await User
     .find({}).populate('ips', { ip: 1, desc: 1, expirationDate: 1, createdAt: 1 })
   response.json(users)
@@ -30,6 +34,10 @@ usersRouter.get('/',auth, async (request, response) => {
 
 //Poistetaan käyttäjä
 usersRouter.delete('/:id',auth, async (request, response) => {
+  const decodedToken = request.decodedToken
+  if (decodedToken.role !== 'admin') {
+    return response.status(401).json({ error: 'unauthorized' })
+  }
   const userId = request.params.id
   //poistetaan IP-taulusta kyseisen käyttäjän kaikki IP:t
   await IPs.deleteMany({user: userId})
