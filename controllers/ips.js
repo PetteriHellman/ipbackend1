@@ -131,7 +131,7 @@ ipsRouter.put('/next-ip/:id',auth, async (request, response, next) => {
     expirationDate: expireDate,
   }
 
-  IPs.findByIdAndUpdate(request.decodedToken.id, ip, { new: true })
+  IPs.findByIdAndUpdate(request.params.id, ip, { new: true })
     .then(updatedIP => {
       response.json(updatedIP)
     })

@@ -1,7 +1,8 @@
 POST http://localhost:3001/api/ips/next-ip
 Content-Type: application/json
-Authorization: Bearer 
+Authorization: Bearer
+
 {
   "desc" : "Kuvaus 1",
-  "networkId" : "640ed0747aca29d71248d021"
+  "networkId" : "6409e96057c07b10fb03d15a"
 }
