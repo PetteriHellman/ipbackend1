@@ -1,2 +1,2 @@
-DELETE http://localhost:3001/api/users/640ed0fd6ffd87f0abfbb935
+DELETE http://localhost:3001/api/users/640ed8c45dbbc91f3afaf4ce
 Authorization: Bearer 

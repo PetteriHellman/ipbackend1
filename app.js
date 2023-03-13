@@ -11,8 +11,6 @@ const usersRouter = require('./controllers/users')
 const middleware = require('./utils/middleware')
 const passRouter = require('./controllers/passwordChange')
 const loginRouter = require('./controllers/login')
-// const adminCreateRouter = require('./controllers/adminCreate')
-// const adminloginRouter = require('./controllers/adminLogin')
 const networkRouter = require('./controllers/network')
 
 mongoose.set('strictQuery', false)

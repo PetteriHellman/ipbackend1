@@ -1,8 +1,9 @@
 POST http://localhost:3001/api/ips/
 Content-Type: application/json
 Authorization: Bearer 
+
 {
-  "ip" : "192.168.1.255",
+  "ip" : "192.168.1.254",
   "desc" : "Testi",
   "TTL" : 1
 }
