@@ -21,17 +21,13 @@ passRouter.post('/', async (request, response, next) => {
   try {
     decodedToken = jwt.verify(token, process.env.SECRET)
   } catch (error) {
-    try {
-      decodedToken = jwt.verify(token, process.env.ADMIN_SECRET)
-    } catch (error) {
-      return response.status(401).json({ error: 'token invalid' })
-    }
+    return response.status(401).json({ error: 'token invalid' })
   }
 
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' })
   }
-  
+
   const { oldPassword, newPassword } = request.body
   try {
     //Otetaan kirjautuneen käyttäjän tiedot talteen
@@ -43,9 +39,9 @@ passRouter.post('/', async (request, response, next) => {
     const isMatch = await bcrypt.compare(oldPassword, user.passwordHash)
     if (!isMatch) {
       return response.status(401).json({ error: 'Invalid password' })
-      
+
     }
-    
+
     // Hash and update new password
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(newPassword, salt)
@@ -53,7 +49,7 @@ passRouter.post('/', async (request, response, next) => {
     await user.save()
 
     response.status(200).json({ message: 'Password updated successfully' })
-    
+
   } catch (error) {
     next(error)
     response.status(500).json({ error: 'Internal server error' })

@@ -1,7 +1,0 @@
-POST http://localhost:3001/api/adminlogin
-Content-Type: application/json
-
-{
-    "email": "johnA@gmail.com",
-    "password": "1"
-}

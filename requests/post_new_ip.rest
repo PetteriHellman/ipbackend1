@@ -1,9 +1,9 @@
 POST http://localhost:3001/api/ips/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2NDA1OWFjMzkyMjhmMzA4ZjQ0YjU0NWYiLCJpYXQiOjE2NzgwODk3MzMsImV4cCI6MTY3ODA5MzMzM30.QA-zs1IUTmJ7z-JPMUCGHbvlJz11w4yXNJxD9l_XQfo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2NDBlZDhjNDVkYmJjOTFmM2FmYWY0Y2UiLCJyb2xlIjoidXNlciIsImlhdCI6MTY3ODY5NTQ2MSwiZXhwIjoxNjc4Njk5MDYxfQ.EAYWeYV7unkIuNtZeVRi5IRXJ8dwvIb-VlnsL5nr2fg
 
 {
-  "ip" : "192.168.0.2",
+  "ip" : "192.168.1.255",
   "desc" : "Testi",
   "TTL" : 1
 }
