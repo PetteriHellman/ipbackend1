@@ -28,6 +28,15 @@ usersRouter.get('/',auth, async (request, response) => {
   response.json(users)
 })
 
+usersRouter.get('/:id',auth, async (request, response) => {
+  const user = await User.findById(request.params.id).populate('ips', { ip: 1, desc: 1, expirationDate: 1, createdAt: 1 })
+  if (user) {
+    response.json(user)
+  } else {
+    response.status(404).end()
+  }
+})
+
 //Poistetaan käyttäjä
 usersRouter.delete('/:id',auth, async (request, response) => {
   const userId = request.params.id
