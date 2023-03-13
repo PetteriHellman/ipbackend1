@@ -23,13 +23,23 @@ usersRouter.post('/', async (request, response) => {
 })
 
 usersRouter.get('/',auth, async (request, response) => {
-  const decodedToken = request.decodedToken
-  if (decodedToken.role !== 'admin') {
-    return response.status(401).json({ error: 'unauthorized' })
+  if (request.decodedToken.role == 'admin'){
+    const users = await User
+      .find({}).populate('ips', { ip: 1, desc: 1, expirationDate: 1, createdAt: 1 })
+    response.json(users)
   }
-  const users = await User
-    .find({}).populate('ips', { ip: 1, desc: 1, expirationDate: 1, createdAt: 1 })
-  response.json(users)
+  else {
+    response.status(404).end()
+  }
+})
+
+usersRouter.get('/user',auth, async (request, response) => {
+  const user = await User.findById(request.decodedToken.id).populate('ips', { ip: 1, desc: 1, expirationDate: 1, createdAt: 1 })
+  if (user) {
+    response.json(user)
+  } else {
+    response.status(404).end()
+  }
 })
 
 //Poistetaan käyttäjä
