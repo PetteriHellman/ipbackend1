@@ -44,6 +44,10 @@ usersRouter.get('/user',auth, async (request, response) => {
 
 //Poistetaan käyttäjä
 usersRouter.delete('/:id',auth, async (request, response) => {
+  const decodedToken = request.decodedToken
+  if (decodedToken.role !== 'admin') {
+    return response.status(401).json({ error: 'unauthorized' })
+  }
   const userId = request.params.id
   //poistetaan IP-taulusta kyseisen käyttäjän kaikki IP:t
   await IPs.deleteMany({user: userId})
