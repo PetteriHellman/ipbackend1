@@ -1,4 +1,4 @@
 DELETE http://localhost:3001/api/ips/640edc928cf9a34586b827aa
 
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlkIjoiNjQwZWQwNGM3YWNhMjlkNzEyNDhkMDFkIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4Njk2ODEzLCJleHAiOjE2Nzg3MDA0MTN9.t0O8JTLH965nGp9IyrfTxxiszDEsEuzWfIE_c8-IdhI
+Authorization: Bearer 

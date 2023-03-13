@@ -1,3 +1,3 @@
 GET http://localhost:3001/api/ips
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlkIjoiNjQwZWQwNGM3YWNhMjlkNzEyNDhkMDFkIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4Njk2NTU5LCJleHAiOjE2Nzg3MDAxNTl9.gMJ3bpJ-zLdyy9zNT5E-jTe3kG8cJFbYdaRuDjlUn-8
+Authorization: Bearer 
