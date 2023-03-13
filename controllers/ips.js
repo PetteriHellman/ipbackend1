@@ -4,7 +4,7 @@ const IPs = require('../models/ip')
 const User = require('../models/user')
 const Network = require('../models/network')
 
-const userAuth = require('../utils/userAuth')
+//const userAuth = require('../utils/userAuth')
 const auth = require('../utils/auth')
 
 const ipblocks = require('ip-blocks')
@@ -22,28 +22,33 @@ ipsRouter.get('/', auth, async (request, response) => {
 })
 
 //tallennetaan ip osoite adminille
-ipsRouter.post('/',userAuth, async (request, response) => {
-  //Tallennetaan pyynnön body muuttujaan
-  const body = request.body
+ipsRouter.post('/', auth, async (request, response) => {
+  if (request.decodedToken.role == 'admin') {
+    //Tallennetaan pyynnön body muuttujaan
+    const body = request.body
 
-  const user = await User.findById(request.decodedToken.id)
+    const user = await User.findById(request.decodedToken.id)
 
-  //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
-  const expireDate = Date.now() + body.TTL * 86400 * 1000
+    //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
+    const expireDate = Date.now() + body.TTL * 86400 * 1000
 
-  const ip = new IPs({
-    ip: body.ip,
-    desc: body.desc,
-    user: user._id,
-    expirationDate: expireDate,
-  })
-  //Tallennetaan ip kantaan
-  const savedIP = await ip.save()
-  //Tallennetaan käyttäjän tietoihin tallenetun IP:n id
-  user.ips = user.ips.concat(savedIP._id)
-  await user.save()
-  //Palautetaan tallennettu IP
-  response.status(201).json(savedIP)
+    const ip = new IPs({
+      ip: body.ip,
+      desc: body.desc,
+      user: user._id,
+      expirationDate: expireDate,
+    })
+    //Tallennetaan ip kantaan
+    const savedIP = await ip.save()
+    //Tallennetaan käyttäjän tietoihin tallenetun IP:n id
+    user.ips = user.ips.concat(savedIP._id)
+    await user.save()
+    //Palautetaan tallennettu IP
+    response.status(201).json(savedIP)
+  }
+  else {
+    response.status(404).end()
+  }
 })
 
 const randomIP = (hostMin, hostMax, network) => {
@@ -81,7 +86,7 @@ const getNextIp = (networkId) => {
 }
 
 //Tarjotaan uutta satunnaisesti generoitua IP-osoitetta
-ipsRouter.post('/next-ip',userAuth, async (request, response, next) => {
+ipsRouter.post('/next-ip',auth, async (request, response, next) => {
   const body = request.body
   
   //Otetaan kirjautuneen käyttäjän tiedot talteen
@@ -113,22 +118,20 @@ ipsRouter.post('/next-ip',userAuth, async (request, response, next) => {
 })
 
 //Vahvistetaan automaattisesti generoitu IP oikealla vanhenemisajalla
-ipsRouter.put('/next-ip/:id',userAuth, async (request, response, next) => {
+ipsRouter.put('/next-ip/:id',auth, async (request, response, next) => {
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen
-  const user = await User.findById(request.decodedToken.id)
+  //const user = await User.findById(request.decodedToken.id)
   
   //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
   const expireDate = Date.now() + body.TTL * 86400 * 1000
 
   const ip = {
-    ip: body.ip,
     desc: body.desc,
-    user: user._id,
     expirationDate: expireDate,
   }
 
-  IPs.findByIdAndUpdate(request.params.id, ip, { new: true })
+  IPs.findByIdAndUpdate(request.decodedToken.id, ip, { new: true })
     .then(updatedIP => {
       response.json(updatedIP)
     })
@@ -136,7 +139,7 @@ ipsRouter.put('/next-ip/:id',userAuth, async (request, response, next) => {
 })
 
 //Haetaan yksittäinen IP-osoite
-ipsRouter.get('/:id',userAuth, async (request, response) => {
+ipsRouter.get('/:id',auth, async (request, response) => {
   const ip = await IPs.findById(request.params.id)
   if (ip) {
     response.json(ip)
@@ -146,13 +149,13 @@ ipsRouter.get('/:id',userAuth, async (request, response) => {
 })
 
 //Poistetaan IP-osoite
-ipsRouter.delete('/:id',userAuth, async (request, response) => {
+ipsRouter.delete('/:id',auth, async (request, response) => {
   await IPs.findByIdAndRemove(request.params.id)
   response.status(204).end()
 })
 
 //Muokataan IP-osoitetta ja/tai kuvausta
-ipsRouter.put('/:id',userAuth, async (request, response, next) => {
+ipsRouter.put('/:id',auth, async (request, response, next) => {
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen
   const user = await User.findById(request.decodedToken.id)
