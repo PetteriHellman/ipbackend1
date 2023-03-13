@@ -23,9 +23,14 @@ usersRouter.post('/', async (request, response) => {
 })
 
 usersRouter.get('/',auth, async (request, response) => {
-  const users = await User
-    .find({}).populate('ips', { ip: 1, desc: 1, expirationDate: 1, createdAt: 1 })
-  response.json(users)
+  if (request.decodedToken.role == 'admin'){
+    const users = await User
+      .find({}).populate('ips', { ip: 1, desc: 1, expirationDate: 1, createdAt: 1 })
+    response.json(users)
+  }
+  else {
+    response.status(404).end()
+  }
 })
 
 usersRouter.get('/user',auth, async (request, response) => {
