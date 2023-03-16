@@ -12,6 +12,7 @@ const middleware = require('./utils/middleware')
 const passRouter = require('./controllers/passwordChange')
 const loginRouter = require('./controllers/login')
 const networkRouter = require('./controllers/network')
+const adminpassRouter = require('./controllers/adminchangePass')
 
 mongoose.set('strictQuery', false)
 
@@ -35,6 +36,7 @@ app.use('/api/users', usersRouter)
 app.use('/api/users/passwordChange', passRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/admin/network', networkRouter)
+app.use('/api/adminchangepass/', adminpassRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

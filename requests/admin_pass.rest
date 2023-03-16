@@ -1,0 +1,7 @@
+POST http://localhost:3001/api/adminchangepass/6412f83c2af918bde541ba69
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlkIjoiNjQxMmRhYzYwZWM1ZDRlYTNlZGNkNDgxIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4OTY0NTEwLCJleHAiOjE2Nzg5NjgxMTB9.6XjlJE0RjZ9AmprAylL7dRZU7gBs4hVHooFSC6UMpzM
+
+{
+  "newPassword": "qwerty"
+}
