@@ -36,7 +36,7 @@ app.use('/api/users', usersRouter)
 app.use('/api/users/passwordChange', passRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/admin/network', networkRouter)
-app.use('/api/adminchangepass/:id',adminpassRouter)
+app.use('/api/adminchangepass/', adminpassRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

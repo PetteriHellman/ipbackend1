@@ -1,7 +1,7 @@
-POST http://localhost:3001/api/adminchangepass/6411a3bb2468e767a8c90d53
+POST http://localhost:3001/api/adminchangepass/6412f83c2af918bde541ba69
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlkIjoiNjQwZWQwNGM3YWNhMjlkNzEyNDhkMDFkIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4ODc5Nzc5LCJleHAiOjE2Nzg4ODMzNzl9.5mVQXwSTFXt46j7g0oJPcBtkKph4rqhxx_XAROgcg8A
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlkIjoiNjQxMmRhYzYwZWM1ZDRlYTNlZGNkNDgxIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc4OTY0NTEwLCJleHAiOjE2Nzg5NjgxMTB9.6XjlJE0RjZ9AmprAylL7dRZU7gBs4hVHooFSC6UMpzM
 
-  {
-  "newPassword": "a"
-  }
+{
+  "newPassword": "qwerty"
+}
