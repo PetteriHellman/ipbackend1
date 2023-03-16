@@ -2,8 +2,9 @@ POST http://localhost:3001/api/users/
 Content-Type: application/json
 
 {
-  "name" : "John D",
+  "name" : "User1",
   "password" : "1234",
-  "email" : "johnC@gmail.com",
+  "email" : "user@gmail.com",
+  "group" :"Ryhmä",
   "role" : "user"
 }

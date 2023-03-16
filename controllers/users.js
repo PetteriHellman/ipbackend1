@@ -5,7 +5,7 @@ const IPs = require('../models/ip')
 const auth = require('../utils/auth')
 
 usersRouter.post('/', async (request, response) => {
-  const { email, name, password } = request.body
+  const { email, name, password, group } = request.body
 
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)
@@ -13,6 +13,7 @@ usersRouter.post('/', async (request, response) => {
   const user = new User({
     email,
     name,
+    group,
     passwordHash,
   })
 

@@ -13,6 +13,11 @@ const userSchema = new mongoose.Schema({
     unique: true,
     match: /^[\w-\\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
   },
+  group: {
+    type: String,
+    minlength: 5,
+    required: false,
+  },
   passwordHash: {
     type: String,
     required: true,
