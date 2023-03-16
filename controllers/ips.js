@@ -76,7 +76,7 @@ const getNextIp = (networkId) => {
         .then(existingIp => {
           if (existingIp) {
             //Jos kannasta löytyy jo kyseinen osoite ajetaan sama funktio uudelleen
-            return getNextIp()
+            return getNextIp(networkId)
           } else {
             //Jos kannasta ei löydy kyseistä osoistetta palautetaan se
             return ipAddress
