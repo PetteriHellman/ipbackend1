@@ -86,28 +86,15 @@ const nextFreeIPBlock = (size, network, taken) => {
   return false;
 }
 
-const getNextIp = (networkId, taken, amount) => {
+const getNextIp = (taken, amount) => {
   //Etsitään verkkon tiedot kannasta
-  return Network.findById(networkId)
+  return Network.findOne({networkActive: true})
     .then(network => {
       if (!network) {
         throw new Error('Network not found')
       }
       return nextFreeIPBlock(amount, network, taken);
-      //Luodaan satunnainen IP-osoite
-      //const ipAddress = randomIP(network.hostMin, network.hostMax, network.hostNetwork)
-      //console.log(ipAddress);
-      //Etsitään kannasta että löytyykö juuri luotu IP
-      //   return IPs.findOne({ ip: ipAddress }).limit(1)
-      //     .then(existingIp => {
-      //       if (existingIp) {
-      //         //Jos kannasta löytyy jo kyseinen osoite ajetaan sama funktio uudelleen
-      //         return getNextIp(networkId)
-      //       } else {
-      //         //Jos kannasta ei löydy kyseistä osoistetta palautetaan se
-      //         return ipAddress
-      //       }
-      //     })
+      
     })
 }
 

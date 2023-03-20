@@ -1,0 +1,7 @@
+PUT http://localhost:3001/api/admin/network/641834076b8a6bc1ccd947c0
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlkIjoiNjQwZWQwNGM3YWNhMjlkNzEyNDhkMDFkIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc5MzA3NzUxLCJleHAiOjE2NzkzMTEzNTF9.e4wWjYQlarNYknKRESEKdGQSiikRBgmpkEyz4tEaYu4
+
+{
+  "networkActive": true
+}

@@ -18,6 +18,10 @@ const networkSchema = new mongoose.Schema({
   hostNetwork: {
     type: Number,
     required: true,
+  },
+  networkActive: {
+    type: Boolean,
+    default: false
   }
 })
 

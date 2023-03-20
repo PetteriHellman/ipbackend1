@@ -1,0 +1,11 @@
+POST http://localhost:3001/api/admin/network
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlkIjoiNjQwZWQwNGM3YWNhMjlkNzEyNDhkMDFkIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc5MzA3NzUxLCJleHAiOjE2NzkzMTEzNTF9.e4wWjYQlarNYknKRESEKdGQSiikRBgmpkEyz4tEaYu4
+
+{
+  "networkName": "my network",
+  "hostMin": "198.168.1.1",
+  "hostMax": "198.168.1.255",
+  "hostNetwork": 24,
+  "networkActive": false
+}
