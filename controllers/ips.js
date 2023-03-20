@@ -71,14 +71,15 @@ const randomIP = (hostMin, hostMax, network) => {
 }
 
 //haetaan seuraava vapaa viereikkäin oleva IP-blokki 
-const nextFreeIPBlock = (size, network, taken) => {
+const nextFreeIPBlock = (amount, network, taken) => {
   const max = ip.toLong(network.hostMax)
   const min = ip.toLong(network.hostMin)
 
-  if (size < 1 || size > 5) size = 1; //tarkistus, että haetaan vain 1-5 IP:tä
+  if (amount < 1 || amount > 5) amount = 1; //tarkistus, että haetaan vain 1-5 IP:tä
 
   let start = 0;
   let possible;
+  let i
 
   for (i = min; i < max; i++) {
     if (!taken.includes(i)) {
@@ -87,8 +88,8 @@ const nextFreeIPBlock = (size, network, taken) => {
       //console.log(start);
     }
     else start = 0;
-    if (start == size) {
-      return Array(size).fill().map((_, index) => intToIP(possible + index))
+    if (start == amount) {
+      return Array(amount).fill().map((_, index) => intToIP(possible + index))
     }
   }
   return false;
@@ -118,8 +119,13 @@ ipsRouter.post('/next-ip',auth, async (request, response, next) => {
   const taken = (await IPs.find({})).map((item) => (ip.toLong(item.ip)));
   //Otetaan kirjautuneen käyttäjän tiedot talteen
   const user = await User.findById(request.decodedToken.id)
+  //checking if active
+  const networkActivity = await Network.findOne({ networkActive: true })
+  if (!networkActivity) {
+    return response.status(400).json({ message: 'Active network not found' })
+  }
   //Kutsutaan getNextIp funktiota
-  getNextIp(body.networkId, taken, amount)
+  getNextIp(networkActivity, taken, amount)
     .then(async ipAddress => {
       //const expireDate = Date.now() + body.TTL * 86400 * 1000
       //Asetetaan aika ensiksi 10 minuutiksi ja päivitetään oikea aika sitten vasta kun käyttäjä hyväksyy IP:n
@@ -222,8 +228,6 @@ ipsRouter.put('/:id',auth, async (request, response, next) => {
     .catch(error => next(error))
 })
 
-module.exports = ipsRouter
-
 function intToIP(int) {
   var part1 = int & 255;
   var part2 = ((int >> 8) & 255);
@@ -232,3 +236,5 @@ function intToIP(int) {
 
   return part4 + "." + part3 + "." + part2 + "." + part1;
 }
+
+module.exports = ipsRouter

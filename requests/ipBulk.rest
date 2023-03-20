@@ -1,0 +1,8 @@
+POST http://localhost:3001/api/ips
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlkIjoiNjQwZWQwNGM3YWNhMjlkNzEyNDhkMDFkIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc5MzEzMjExLCJleHAiOjE2NzkzMTY4MTF9.dY_GV4Q4E5MBwRXsLsTVA7I_Ja3wdSlnkv44BhEl4qU
+
+{
+  "amount": 4,
+  "desc": "Test IP"
+}
