@@ -64,29 +64,26 @@ const randomIP = (hostMin, hostMax, network) => {
 
 //haetaan seuraava vapaa viereikkäin oleva IP-blokki 
 const nextFreeIPBlock = (size, network, taken) => {
-    const max = ip.toLong(network.hostMax)
-    const min = ip.toLong(network.hostMin)
+  const max = ip.toLong(network.hostMax)
+  const min = ip.toLong(network.hostMin)
 
-    if (size < 1 || size > 5) size = 1; //tarkistus, että haetaan vain 1-5 IP:tä
+  if (size < 1 || size > 5) size = 1; //tarkistus, että haetaan vain 1-5 IP:tä
 
-    let start = 0;
-    let possible;
+  let start = 0;
+  let possible;
 
-    for (i = min; i < max; i++) 
-    {
-        if (!taken.includes(i)) 
-        {
-            start++;
-            if(start==1) possible = i;
-            //console.log(start);
-        } 
-        else start = 0;
-        if (start == size)
-        {
-            return Array(size).fill().map((_, index) => intToIP(possible + index))
-        }
+  for (i = min; i < max; i++) {
+    if (!taken.includes(i)) {
+      start++;
+      if (start == 1) possible = i;
+      //console.log(start);
     }
-    return false;
+    else start = 0;
+    if (start == size) {
+      return Array(size).fill().map((_, index) => intToIP(possible + index))
+    }
+  }
+  return false;
 }
 
 const getNextIp = (networkId, taken, amount) => {
@@ -101,21 +98,21 @@ const getNextIp = (networkId, taken, amount) => {
       //const ipAddress = randomIP(network.hostMin, network.hostMax, network.hostNetwork)
       //console.log(ipAddress);
       //Etsitään kannasta että löytyykö juuri luotu IP
-    //   return IPs.findOne({ ip: ipAddress }).limit(1)
-    //     .then(existingIp => {
-    //       if (existingIp) {
-    //         //Jos kannasta löytyy jo kyseinen osoite ajetaan sama funktio uudelleen
-    //         return getNextIp(networkId)
-    //       } else {
-    //         //Jos kannasta ei löydy kyseistä osoistetta palautetaan se
-    //         return ipAddress
-    //       }
-    //     })
+      //   return IPs.findOne({ ip: ipAddress }).limit(1)
+      //     .then(existingIp => {
+      //       if (existingIp) {
+      //         //Jos kannasta löytyy jo kyseinen osoite ajetaan sama funktio uudelleen
+      //         return getNextIp(networkId)
+      //       } else {
+      //         //Jos kannasta ei löydy kyseistä osoistetta palautetaan se
+      //         return ipAddress
+      //       }
+      //     })
     })
 }
 
 //Tarjotaan uutta satunnaisesti generoitua IP-osoitetta
-ipsRouter.post('/next-ip',auth, async (request, response, next) => {
+ipsRouter.post('/next-ip', auth, async (request, response, next) => {
   const body = request.body
   const amount = body.amount
   //Haetaan kaikki jo varatut IP:t
@@ -155,11 +152,11 @@ ipsRouter.post('/next-ip',auth, async (request, response, next) => {
 })
 
 //Vahvistetaan automaattisesti generoitu IP oikealla vanhenemisajalla
-ipsRouter.put('/next-ip/:id',auth, async (request, response, next) => {
+ipsRouter.put('/next-ip/:id', auth, async (request, response, next) => {
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen
   //const user = await User.findById(request.decodedToken.id)
-  
+
   //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
   const expireDate = Date.now() + body.TTL * 86400 * 1000
 
@@ -176,7 +173,7 @@ ipsRouter.put('/next-ip/:id',auth, async (request, response, next) => {
 })
 
 //Haetaan yksittäinen IP-osoite
-ipsRouter.get('/:id',auth, async (request, response) => {
+ipsRouter.get('/:id', auth, async (request, response) => {
   const ip = await IPs.findById(request.params.id)
   if (ip) {
     response.json(ip)
@@ -186,13 +183,13 @@ ipsRouter.get('/:id',auth, async (request, response) => {
 })
 
 //Poistetaan IP-osoite
-ipsRouter.delete('/:id',auth, async (request, response) => {
+ipsRouter.delete('/:id', auth, async (request, response) => {
   await IPs.findByIdAndRemove(request.params.id)
   response.status(204).end()
 })
 
 //Muokataan IP-osoitetta ja/tai kuvausta
-ipsRouter.put('/:id',auth, async (request, response, next) => {
+ipsRouter.put('/:id', auth, async (request, response, next) => {
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen
   const user = await User.findById(request.decodedToken.id)
@@ -213,10 +210,10 @@ ipsRouter.put('/:id',auth, async (request, response, next) => {
 module.exports = ipsRouter
 
 function intToIP(int) {
-    var part1 = int & 255;
-    var part2 = ((int >> 8) & 255);
-    var part3 = ((int >> 16) & 255);
-    var part4 = ((int >> 24) & 255);
+  var part1 = int & 255;
+  var part2 = ((int >> 8) & 255);
+  var part3 = ((int >> 16) & 255);
+  var part4 = ((int >> 24) & 255);
 
-    return part4 + "." + part3 + "." + part2 + "." + part1;
+  return part4 + "." + part3 + "." + part2 + "." + part1;
 }
