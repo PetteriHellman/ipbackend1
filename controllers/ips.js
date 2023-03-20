@@ -93,7 +93,7 @@ const getNextIp = (taken, amount) => {
       if (!network) {
         throw new Error('Network not found')
       }
-      return nextFreeIPBlock(amount, network, taken);
+      return nextFreeIPBlock(amount, network, taken)
       
     })
 }
