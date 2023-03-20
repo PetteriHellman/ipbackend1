@@ -4,6 +4,10 @@ const loginRouter = require('express').Router()
 const User = require('../models/user')
 
 loginRouter.post('/', async (request, response) => {
+  /*
+    #swagger.tags = ['Login]
+    #swagger.description = 'Endpoint to sign in a specific user.'
+  */
   const { email, password } = request.body
 
   const user = await User.findOne({ email })

@@ -6,6 +6,9 @@ const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 require('express-async-errors')
 
+const swaggerUi = require('swagger-ui-express')
+const swaggerFile = require('./docs/swagger-output.json')
+
 const ipsRouter = require('./controllers/ips')
 const usersRouter = require('./controllers/users')
 const middleware = require('./utils/middleware')
@@ -37,6 +40,8 @@ app.use('/api/users/passwordChange', passRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/admin/network', networkRouter)
 app.use('/api/adminchangepass/', adminpassRouter)
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

@@ -12,6 +12,10 @@ const ip = require('ip')
 
 //haetaan kaikki IP-osoitteet adminille
 ipsRouter.get('/', auth, async (request, response) => {
+  /*
+  #swagger.tags = ['IP address']
+  #swagger.description = 'Endpoint for get all IP address for admins.'
+  */
   const decodedToken = request.decodedToken
   if (decodedToken.role === 'admin') {
     const ips = await IPs.find({})
@@ -23,6 +27,10 @@ ipsRouter.get('/', auth, async (request, response) => {
 
 //tallennetaan ip osoite adminille
 ipsRouter.post('/', auth, async (request, response) => {
+  /*
+  #swagger.tags = ['IP address']
+  #swagger.description = 'Endpoint for save IP address for admins.'
+  */
   if (request.decodedToken.role == 'admin') {
     //Tallennetaan pyynnön body muuttujaan
     const body = request.body
@@ -99,7 +107,11 @@ const getNextIp = (taken, amount) => {
 }
 
 //Tarjotaan uutta satunnaisesti generoitua IP-osoitetta
-ipsRouter.post('/next-ip', auth, async (request, response, next) => {
+ipsRouter.post('/next-ip',auth, async (request, response, next) => {
+  /*
+  #swagger.tags = ['Autogen IP address']
+  #swagger.description = 'Endpoint for provide next free IP address.'
+  */
   const body = request.body
   const amount = body.amount
   //Haetaan kaikki jo varatut IP:t
@@ -139,7 +151,11 @@ ipsRouter.post('/next-ip', auth, async (request, response, next) => {
 })
 
 //Vahvistetaan automaattisesti generoitu IP oikealla vanhenemisajalla
-ipsRouter.put('/next-ip/:id', auth, async (request, response, next) => {
+ipsRouter.put('/next-ip/:id',auth, async (request, response, next) => {
+  /*
+  #swagger.tags = ['Autogen IP address']
+  #swagger.description = 'Endpoint for provide next free IP address confirm.'
+  */
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen
   //const user = await User.findById(request.decodedToken.id)
@@ -160,7 +176,11 @@ ipsRouter.put('/next-ip/:id', auth, async (request, response, next) => {
 })
 
 //Haetaan yksittäinen IP-osoite
-ipsRouter.get('/:id', auth, async (request, response) => {
+ipsRouter.get('/:id',auth, async (request, response) => {
+  /*
+  #swagger.tags = ['IP address']
+  #swagger.description = 'Endpoint for get single IP address.'
+  */
   const ip = await IPs.findById(request.params.id)
   if (ip) {
     response.json(ip)
@@ -170,13 +190,21 @@ ipsRouter.get('/:id', auth, async (request, response) => {
 })
 
 //Poistetaan IP-osoite
-ipsRouter.delete('/:id', auth, async (request, response) => {
+ipsRouter.delete('/:id',auth, async (request, response) => {
+  /*
+  #swagger.tags = ['IP address']
+  #swagger.description = 'Endpoint for delete single IP address.'
+  */
   await IPs.findByIdAndRemove(request.params.id)
   response.status(204).end()
 })
 
 //Muokataan IP-osoitetta ja/tai kuvausta
-ipsRouter.put('/:id', auth, async (request, response, next) => {
+ipsRouter.put('/:id',auth, async (request, response, next) => {
+  /*
+  #swagger.tags = ['IP address']
+  #swagger.description = 'Endpoint for edit single IP address and/or description.'
+  */
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen
   const user = await User.findById(request.decodedToken.id)
