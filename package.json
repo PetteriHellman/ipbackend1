@@ -7,6 +7,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "lint": "eslint .",
+    "swagger-autogen": "node ./utils/swagger.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Petteri Hellman",
@@ -26,10 +27,13 @@
     "mongoose-unique-validator": "^3.1.0",
     "morgan": "^1.10.0",
     "readline": "^1.3.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.2",
     "util": "^0.12.5"
   },
   "devDependencies": {
     "eslint": "^8.34.0",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "swagger-autogen": "^2.23.1"
   }
 }
