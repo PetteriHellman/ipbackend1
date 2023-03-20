@@ -15,6 +15,7 @@ ipsRouter.get('/', auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
   #swagger.description = 'Endpoint for get all IP address for admins.'
+  #swagger.security = [{"bearerAuth": []}]
   */
   const decodedToken = request.decodedToken
   if (decodedToken.role === 'admin') {
@@ -30,6 +31,7 @@ ipsRouter.post('/', auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
   #swagger.description = 'Endpoint for save IP address for admins.'
+  #swagger.security = [{"bearerAuth": []}]
   */
   if (request.decodedToken.role == 'admin') {
     //Tallennetaan pyynnön body muuttujaan
@@ -127,6 +129,7 @@ ipsRouter.post('/next-ip',auth, async (request, response, next) => {
   /*
   #swagger.tags = ['Autogen IP address']
   #swagger.description = 'Endpoint for provide next free IP address.'
+  #swagger.security = [{"bearerAuth": []}]
   */
   const body = request.body
   const amount = body.amount
@@ -171,6 +174,7 @@ ipsRouter.put('/next-ip/:id',auth, async (request, response, next) => {
   /*
   #swagger.tags = ['Autogen IP address']
   #swagger.description = 'Endpoint for provide next free IP address confirm.'
+  #swagger.security = [{"bearerAuth": []}]
   */
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen
@@ -196,6 +200,7 @@ ipsRouter.get('/:id',auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
   #swagger.description = 'Endpoint for get single IP address.'
+  #swagger.security = [{"bearerAuth": []}]
   */
   const ip = await IPs.findById(request.params.id)
   if (ip) {
@@ -210,6 +215,7 @@ ipsRouter.delete('/:id',auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
   #swagger.description = 'Endpoint for delete single IP address.'
+  #swagger.security = [{"bearerAuth": []}]
   */
   await IPs.findByIdAndRemove(request.params.id)
   response.status(204).end()
@@ -220,6 +226,7 @@ ipsRouter.put('/:id',auth, async (request, response, next) => {
   /*
   #swagger.tags = ['IP address']
   #swagger.description = 'Endpoint for edit single IP address and/or description.'
+  #swagger.security = [{"bearerAuth": []}]
   */
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen

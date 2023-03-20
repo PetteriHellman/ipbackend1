@@ -17,6 +17,7 @@ adminpassRouter.post('/:id', auth, async (req, res) => {
   /*
   #swagger.tags = ['Admin']
   #swagger.description = 'Endpoint for change user passwords.'
+  #swagger.security = [{"bearerAuth": []}]
   */
   const token = getTokenFrom(req)
   let decodedToken

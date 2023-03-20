@@ -4,6 +4,11 @@ const auth = require('../utils/auth')
 
 //tallennetaan verkko
 networkRouter.post('/',auth, async (request, response) => {
+  /*
+  #swagger.tags = ['Network']
+  #swagger.description = 'Make new network'
+  #swagger.security = [{"bearerAuth": []}]
+  */
   const body = request.body
   
   const network = new Network({
@@ -19,6 +24,11 @@ networkRouter.post('/',auth, async (request, response) => {
 })
 
 networkRouter.get('/',auth, async (request, response) => {
+  /*
+  #swagger.tags = ['Network']
+  #swagger.description = 'Get all networks'
+  #swagger.security = [{"bearerAuth": []}]
+  */
   const network = await Network
     .find({})
 
