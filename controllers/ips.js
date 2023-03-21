@@ -1,12 +1,8 @@
 const ipsRouter = require('express').Router()
-
 const IPs = require('../models/ip')
 const User = require('../models/user')
 const Network = require('../models/network')
-
-//const userAuth = require('../utils/userAuth')
 const auth = require('../utils/auth')
-
 const ipblocks = require('ip-blocks')
 const ip = require('ip')
 
@@ -76,35 +72,33 @@ const randomIP = (hostMin, hostMax, network) => {
 
 //haetaan seuraava vapaa viereikkäin oleva IP-blokki 
 const nextFreeIPBlock = (network, taken, size, role) => {
-    const max = ip.toLong(network.hostMax)
-    const min = ip.toLong(network.hostMin)
+  const max = ip.toLong(network.hostMax)
+  const min = ip.toLong(network.hostMin)
 
-    //tarkistus, että haetaan vain 1-5 IP:tä, jos hakijana käyttäjä
-    if (role === 'user' && (size < 1 || size > 5)) throw new Error('Invalid amount requested as ' + role);
+  //tarkistus, että haetaan vain 1-5 IP:tä, jos hakijana käyttäjä
+  if (role === 'user' && (size < 1 || size > 5)) throw new Error('Invalid amount requested as ' + role);
 
-    let start = 0;
-    let possible;
+  let start = 0;
+  let possible;
+  let i
 
-    for (i = min; i < max; i++) 
-    {
-        if (!taken.includes(i)) 
-        {
-            start++;
-            if(start==1) possible = i;
-            //console.log(start);
-        } 
-        else start = 0;
-        if (start == size)
-        {
-            return Array(size).fill().map((_, index) => intToIP(possible + index))
-        }
+  for (i = min; i < max; i++) {
+    if (!taken.includes(i)) {
+      start++;
+      if (start == 1) possible = i;
+      //console.log(start);
     }
-    throw new Error('Not enough free contiguous IP addresses at given block size');
+    else start = 0;
+    if (start == size) {
+      return Array(size).fill().map((_, index) => intToIP(possible + index))
+    }
+  }
+  throw new Error('Not enough free contiguous IP addresses at given block size');
 }
 
-const getNextIp = (networkId, taken, amount, role) => {
+const getNextIp = (taken, amount, role) => {
   //Etsitään verkkon tiedot kannasta
-  return Network.findById(networkId)
+  return Network.findOne({ networkActive: true })
     .then(network => {
       if (!network) {
         throw new Error('Network not found')
@@ -114,7 +108,7 @@ const getNextIp = (networkId, taken, amount, role) => {
 }
 
 //Tarjotaan uutta satunnaisesti generoitua IP-osoitetta
-ipsRouter.post('/next-ip',auth, async (request, response, next) => {
+ipsRouter.post('/next-ip', auth, async (request, response, next) => {
   /*
   #swagger.tags = ['Autogen IP address']
   #swagger.summary = 'Endpoint for provide next free IP address.'
@@ -127,8 +121,13 @@ ipsRouter.post('/next-ip',auth, async (request, response, next) => {
   const taken = (await IPs.find({})).map((item) => (ip.toLong(item.ip)));
   //Otetaan kirjautuneen käyttäjän tiedot talteen
   const user = await User.findById(request.decodedToken.id)
+  //checking if active
+  const networkActivity = await Network.findOne({ networkActive: true })
+  if (!networkActivity) {
+    return response.status(400).json({ message: 'Active network not found' })
+  }
   //Kutsutaan getNextIp funktiota
-  getNextIp(body.networkId, taken, amount, user.role)
+  getNextIp( taken, amount, user.role)
     .then(async ipAddress => {
       //const expireDate = Date.now() + body.TTL * 86400 * 1000
       //Asetetaan aika ensiksi 10 minuutiksi ja päivitetään oikea aika sitten vasta kun käyttäjä hyväksyy IP:n
@@ -154,13 +153,13 @@ ipsRouter.post('/next-ip',auth, async (request, response, next) => {
       response.status(201).json({ message: 'Uusi IP-osoite luotu', savedIP })
     })
     .catch(error => {
-      response.status(500).json({ message: 'Internal server error: '+ error.message })
+      response.status(500).json({ message: 'Internal server error: ' + error.message })
       next(error)
     })
 })
 
 //Vahvistetaan automaattisesti generoitu IP oikealla vanhenemisajalla
-ipsRouter.put('/next-ip/:id',auth, async (request, response, next) => {
+ipsRouter.put('/next-ip/:id', auth, async (request, response, next) => {
   /*
   #swagger.tags = ['Autogen IP address']
   #swagger.summary = 'Endpoint for provide next free IP address confirm.'
@@ -170,7 +169,7 @@ ipsRouter.put('/next-ip/:id',auth, async (request, response, next) => {
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen
   //const user = await User.findById(request.decodedToken.id)
-  
+
   //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
   const expireDate = Date.now() + body.TTL * 86400 * 1000
 
@@ -187,7 +186,7 @@ ipsRouter.put('/next-ip/:id',auth, async (request, response, next) => {
 })
 
 //Haetaan yksittäinen IP-osoite
-ipsRouter.get('/:id',auth, async (request, response) => {
+ipsRouter.get('/:id', auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
   #swagger.summary = 'Endpoint for get single IP address.'
@@ -203,7 +202,7 @@ ipsRouter.get('/:id',auth, async (request, response) => {
 })
 
 //Poistetaan IP-osoite
-ipsRouter.delete('/:id',auth, async (request, response) => {
+ipsRouter.delete('/:id', auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
   #swagger.summary = 'Endpoint for delete single IP address.'
@@ -215,7 +214,7 @@ ipsRouter.delete('/:id',auth, async (request, response) => {
 })
 
 //Muokataan IP-osoitetta ja/tai kuvausta
-ipsRouter.put('/:id',auth, async (request, response, next) => {
+ipsRouter.put('/:id', auth, async (request, response, next) => {
   /*
   #swagger.tags = ['IP address']
   #swagger.summary = 'Endpoint for edit single IP address and/or description.'
@@ -239,13 +238,13 @@ ipsRouter.put('/:id',auth, async (request, response, next) => {
     .catch(error => next(error))
 })
 
-module.exports = ipsRouter
-
 function intToIP(int) {
-    var part1 = int & 255;
-    var part2 = ((int >> 8) & 255);
-    var part3 = ((int >> 16) & 255);
-    var part4 = ((int >> 24) & 255);
+  var part1 = int & 255;
+  var part2 = ((int >> 8) & 255);
+  var part3 = ((int >> 16) & 255);
+  var part4 = ((int >> 24) & 255);
 
-    return part4 + "." + part3 + "." + part2 + "." + part1;
+  return part4 + "." + part3 + "." + part2 + "." + part1;
 }
+
+module.exports = ipsRouter
