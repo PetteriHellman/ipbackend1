@@ -81,4 +81,25 @@ usersRouter.delete('/:id',auth, async (request, response) => {
   response.status(204).end()
 })
 
+usersRouter.put('/:id/role', auth, async (request, response) => {
+  
+  const decodedToken = request.decodedToken
+  if (decodedToken.role !== 'admin') {
+    return response.status(401).json({ error: 'unauthorized' })
+  }
+  const userId = request.params.id
+  const { role } = request.body
+
+  if (!['user', 'admin'].includes(role)) {
+    return response.status(400).json({ error: 'Invalid role' })
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(userId, { role }, { new: true })
+  if (updatedUser) {
+    response.json(updatedUser)
+  } else {
+    response.status(404).end()
+  }
+})
+
 module.exports = usersRouter
