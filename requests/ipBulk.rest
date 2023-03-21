@@ -1,8 +1,8 @@
-POST http://localhost:3001/api/ips
+POST http://localhost:3001/api/ips/next-ip
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlkIjoiNjQwZWQwNGM3YWNhMjlkNzEyNDhkMDFkIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc5MzEzMjExLCJleHAiOjE2NzkzMTY4MTF9.dY_GV4Q4E5MBwRXsLsTVA7I_Ja3wdSlnkv44BhEl4qU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI2NDE5N2UzOWM3YjM4ZDk5MGNiNWY0NGEiLCJyb2xlIjoidXNlciIsImlhdCI6MTY3OTM5MjMzNCwiZXhwIjoxNjc5Mzk1OTM0fQ.U98MlgFTJcvaFw1xNxJ7PTYJosiSAVeYgBqUzbAzlbo
 
 {
   "amount": 4,
-  "desc": "Test IP"
+  "desc":"BBBBBBB"
 }

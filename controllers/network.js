@@ -44,6 +44,11 @@ networkRouter.put('/:id', auth, async (request, response) => {
   const { networkActive } = request.body
 
   try {
+    if (networkActive === true) {
+      // Deactivate all other networks
+      await Network.updateMany({ _id: { $ne: id } }, { networkActive: false })
+    }
+
     const network = await Network.findByIdAndUpdate(
       id,
       { networkActive },
