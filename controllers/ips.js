@@ -73,11 +73,12 @@ const randomIP = (hostMin, hostMax, network) => {
 }
 
 //haetaan seuraava vapaa viereikkäin oleva IP-blokki 
-const nextFreeIPBlock = (size, network, taken) => {
+const nextFreeIPBlock = (network, taken, size, role) => {
     const max = ip.toLong(network.hostMax)
     const min = ip.toLong(network.hostMin)
 
-    if (size < 1 || size > 5) size = 1; //tarkistus, että haetaan vain 1-5 IP:tä
+    //tarkistus, että haetaan vain 1-5 IP:tä, jos hakijana käyttäjä
+    if (role === 'user' && (size < 1 || size > 5)) throw new Error('Invalid amount requested as ' + role);
 
     let start = 0;
     let possible;
@@ -96,31 +97,17 @@ const nextFreeIPBlock = (size, network, taken) => {
             return Array(size).fill().map((_, index) => intToIP(possible + index))
         }
     }
-    return false;
+    throw new Error('Not enough free contiguous IP addresses at given block size');
 }
 
-const getNextIp = (networkId, taken, amount) => {
+const getNextIp = (networkId, taken, amount, role) => {
   //Etsitään verkkon tiedot kannasta
   return Network.findById(networkId)
     .then(network => {
       if (!network) {
         throw new Error('Network not found')
       }
-      return nextFreeIPBlock(amount, network, taken);
-      //Luodaan satunnainen IP-osoite
-      //const ipAddress = randomIP(network.hostMin, network.hostMax, network.hostNetwork)
-      //console.log(ipAddress);
-      //Etsitään kannasta että löytyykö juuri luotu IP
-    //   return IPs.findOne({ ip: ipAddress }).limit(1)
-    //     .then(existingIp => {
-    //       if (existingIp) {
-    //         //Jos kannasta löytyy jo kyseinen osoite ajetaan sama funktio uudelleen
-    //         return getNextIp(networkId)
-    //       } else {
-    //         //Jos kannasta ei löydy kyseistä osoistetta palautetaan se
-    //         return ipAddress
-    //       }
-    //     })
+      return nextFreeIPBlock(network, taken, amount, role);
     })
 }
 
@@ -138,7 +125,7 @@ ipsRouter.post('/next-ip',auth, async (request, response, next) => {
   //Otetaan kirjautuneen käyttäjän tiedot talteen
   const user = await User.findById(request.decodedToken.id)
   //Kutsutaan getNextIp funktiota
-  getNextIp(body.networkId, taken, amount)
+  getNextIp(body.networkId, taken, amount, user.role)
     .then(async ipAddress => {
       //const expireDate = Date.now() + body.TTL * 86400 * 1000
       //Asetetaan aika ensiksi 10 minuutiksi ja päivitetään oikea aika sitten vasta kun käyttäjä hyväksyy IP:n
@@ -164,7 +151,7 @@ ipsRouter.post('/next-ip',auth, async (request, response, next) => {
       response.status(201).json({ message: 'Uusi IP-osoite luotu', savedIP })
     })
     .catch(error => {
-      response.status(500).json({ message: 'Internal server error' })
+      response.status(500).json({ message: 'Internal server error: '+ error.message })
       next(error)
     })
 })
