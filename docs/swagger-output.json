@@ -16,6 +16,7 @@
         "tags": [
           "IP address"
         ],
+        "summary": "Endpoint for get all IP address for admins.",
         "description": "Endpoint for get all IP address for admins.",
         "parameters": [],
         "responses": {
@@ -36,6 +37,7 @@
         "tags": [
           "IP address"
         ],
+        "summary": "Endpoint for save IP address for admins.",
         "description": "Endpoint for save IP address for admins.",
         "parameters": [],
         "responses": {
@@ -81,6 +83,7 @@
         "tags": [
           "Autogen IP address"
         ],
+        "summary": "Endpoint for provide next free IP address.",
         "description": "Endpoint for provide next free IP address.",
         "parameters": [],
         "responses": {
@@ -126,6 +129,7 @@
         "tags": [
           "Autogen IP address"
         ],
+        "summary": "Endpoint for provide next free IP address confirm.",
         "description": "Endpoint for provide next free IP address confirm.",
         "parameters": [
           {
@@ -174,6 +178,7 @@
         "tags": [
           "IP address"
         ],
+        "summary": "Endpoint for get single IP address.",
         "description": "Endpoint for get single IP address.",
         "parameters": [
           {
@@ -206,6 +211,7 @@
         "tags": [
           "IP address"
         ],
+        "summary": "Endpoint for delete single IP address.",
         "description": "Endpoint for delete single IP address.",
         "parameters": [
           {
@@ -235,6 +241,7 @@
         "tags": [
           "IP address"
         ],
+        "summary": "Endpoint for edit single IP address and/or description.",
         "description": "Endpoint for edit single IP address and/or description.",
         "parameters": [
           {
@@ -283,6 +290,7 @@
         "tags": [
           "Register"
         ],
+        "summary": "Create new user",
         "description": "Create new user",
         "parameters": [],
         "responses": {
@@ -318,6 +326,7 @@
         "tags": [
           "Admin"
         ],
+        "summary": "Get all users",
         "description": "Get all users",
         "parameters": [],
         "responses": {
@@ -343,6 +352,7 @@
         "tags": [
           "User"
         ],
+        "summary": "Get user",
         "description": "Get user",
         "parameters": [],
         "responses": {
@@ -368,6 +378,7 @@
         "tags": [
           "Admin"
         ],
+        "summary": "Delete user and ip addresses belong to it",
         "description": "Delete user and ip addresses belong to it",
         "parameters": [
           {
@@ -436,6 +447,7 @@
         "tags": [
           "Login"
         ],
+        "summary": "Endpoint to sign in a specific user.",
         "description": "Endpoint to sign in a specific user.",
         "parameters": [],
         "responses": {
@@ -470,6 +482,7 @@
         "tags": [
           "Network"
         ],
+        "summary": "Make new network",
         "description": "Make new network",
         "parameters": [],
         "responses": {
@@ -513,6 +526,7 @@
         "tags": [
           "Network"
         ],
+        "summary": "Get all networks",
         "description": "Get all networks",
         "parameters": [],
         "responses": {
@@ -535,6 +549,7 @@
         "tags": [
           "Admin"
         ],
+        "summary": "Endpoint for change user passwords.",
         "description": "Endpoint for change user passwords.",
         "parameters": [
           {

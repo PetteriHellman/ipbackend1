@@ -14,6 +14,7 @@ const ip = require('ip')
 ipsRouter.get('/', auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
+  #swagger.summary = 'Endpoint for get all IP address for admins.'
   #swagger.description = 'Endpoint for get all IP address for admins.'
   #swagger.security = [{"bearerAuth": []}]
   */
@@ -30,6 +31,7 @@ ipsRouter.get('/', auth, async (request, response) => {
 ipsRouter.post('/', auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
+  #swagger.summary = 'Endpoint for save IP address for admins.'
   #swagger.description = 'Endpoint for save IP address for admins.'
   #swagger.security = [{"bearerAuth": []}]
   */
@@ -115,6 +117,7 @@ const getNextIp = (networkId, taken, amount, role) => {
 ipsRouter.post('/next-ip',auth, async (request, response, next) => {
   /*
   #swagger.tags = ['Autogen IP address']
+  #swagger.summary = 'Endpoint for provide next free IP address.'
   #swagger.description = 'Endpoint for provide next free IP address.'
   #swagger.security = [{"bearerAuth": []}]
   */
@@ -160,6 +163,7 @@ ipsRouter.post('/next-ip',auth, async (request, response, next) => {
 ipsRouter.put('/next-ip/:id',auth, async (request, response, next) => {
   /*
   #swagger.tags = ['Autogen IP address']
+  #swagger.summary = 'Endpoint for provide next free IP address confirm.'
   #swagger.description = 'Endpoint for provide next free IP address confirm.'
   #swagger.security = [{"bearerAuth": []}]
   */
@@ -186,6 +190,7 @@ ipsRouter.put('/next-ip/:id',auth, async (request, response, next) => {
 ipsRouter.get('/:id',auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
+  #swagger.summary = 'Endpoint for get single IP address.'
   #swagger.description = 'Endpoint for get single IP address.'
   #swagger.security = [{"bearerAuth": []}]
   */
@@ -201,6 +206,7 @@ ipsRouter.get('/:id',auth, async (request, response) => {
 ipsRouter.delete('/:id',auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
+  #swagger.summary = 'Endpoint for delete single IP address.'
   #swagger.description = 'Endpoint for delete single IP address.'
   #swagger.security = [{"bearerAuth": []}]
   */
@@ -212,6 +218,7 @@ ipsRouter.delete('/:id',auth, async (request, response) => {
 ipsRouter.put('/:id',auth, async (request, response, next) => {
   /*
   #swagger.tags = ['IP address']
+  #swagger.summary = 'Endpoint for edit single IP address and/or description.'
   #swagger.description = 'Endpoint for edit single IP address and/or description.'
   #swagger.security = [{"bearerAuth": []}]
   */

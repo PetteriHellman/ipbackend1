@@ -6,6 +6,7 @@ const User = require('../models/user')
 loginRouter.post('/', async (request, response) => {
   /*
     #swagger.tags = ['Login']
+    #swagger.summary = 'Endpoint to sign in a specific user.'
     #swagger.description = 'Endpoint to sign in a specific user.'
   */
   const { email, password } = request.body
