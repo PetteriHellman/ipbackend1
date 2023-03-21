@@ -90,6 +90,9 @@
           "201": {
             "description": "Created"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -109,9 +112,6 @@
                 "type": "object",
                 "properties": {
                   "amount": {
-                    "example": "any"
-                  },
-                  "networkId": {
                     "example": "any"
                   },
                   "desc": {
@@ -405,6 +405,49 @@
         ]
       }
     },
+    "/api/users/{id}/role": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/users/passwordChange/": {
       "post": {
         "description": "",
@@ -515,6 +558,9 @@
                   },
                   "hostNetwork": {
                     "example": "any"
+                  },
+                  "networkActive": {
+                    "example": "any"
                   }
                 }
               }
@@ -542,6 +588,46 @@
             "bearerAuth": []
           }
         ]
+      }
+    },
+    "/api/admin/network/{id}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "networkActive": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/adminchangepass/{id}": {

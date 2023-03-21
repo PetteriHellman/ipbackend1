@@ -4,7 +4,7 @@ Content-Type: application/json
 {
   "name" : "john Cena",
   "password" : "1234",
-  "email" : "user@gmail.com",
+  "email" : "userZ@gmail.com",
   "group" :"Ryhmä",
-  "role" : "user"
+  "role" : "null"
 }
