@@ -6,6 +6,7 @@ const auth = require('../utils/auth')
 networkRouter.post('/',auth, async (request, response) => {
   /*
   #swagger.tags = ['Network']
+  #swagger.summary = 'Make new network'
   #swagger.description = 'Make new network'
   #swagger.security = [{"bearerAuth": []}]
   */
@@ -26,6 +27,7 @@ networkRouter.post('/',auth, async (request, response) => {
 networkRouter.get('/',auth, async (request, response) => {
   /*
   #swagger.tags = ['Network']
+  #swagger.summary = 'Get all networks'
   #swagger.description = 'Get all networks'
   #swagger.security = [{"bearerAuth": []}]
   */
