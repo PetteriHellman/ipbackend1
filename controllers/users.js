@@ -7,6 +7,7 @@ const auth = require('../utils/auth')
 usersRouter.post('/', async (request, response) => {
   /*
   #swagger.tags = ['Register']
+  #swagger.summary = 'Create new user'
   #swagger.description = 'Create new user'
   */
   const { email, name, password, group } = request.body
@@ -30,6 +31,7 @@ usersRouter.post('/', async (request, response) => {
 usersRouter.get('/',auth, async (request, response) => {
   /*
   #swagger.tags = ['Admin']
+  #swagger.summary = 'Get all users'
   #swagger.description = 'Get all users'
   #swagger.security = [{"bearerAuth": []}]
   */
@@ -46,6 +48,7 @@ usersRouter.get('/',auth, async (request, response) => {
 usersRouter.get('/user',auth, async (request, response) => {
   /*
   #swagger.tags = ['User']
+  #swagger.summary = 'Get user'
   #swagger.description = 'Get user'
   #swagger.security = [{"bearerAuth": []}]
   */
@@ -61,6 +64,7 @@ usersRouter.get('/user',auth, async (request, response) => {
 usersRouter.delete('/:id',auth, async (request, response) => {
   /*
   #swagger.tags = ['Admin']
+  #swagger.summary = 'Delete user and ip addresses belong to it'
   #swagger.description = 'Delete user and ip addresses belong to it'
   #swagger.security = [{"bearerAuth": []}]
   */

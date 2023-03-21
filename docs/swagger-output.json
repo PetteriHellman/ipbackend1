@@ -283,6 +283,7 @@
         "tags": [
           "Register"
         ],
+        "summary": "Create new user",
         "description": "Create new user",
         "parameters": [],
         "responses": {
@@ -318,6 +319,7 @@
         "tags": [
           "Admin"
         ],
+        "summary": "Get all users",
         "description": "Get all users",
         "parameters": [],
         "responses": {
@@ -343,6 +345,7 @@
         "tags": [
           "User"
         ],
+        "summary": "Get user",
         "description": "Get user",
         "parameters": [],
         "responses": {
@@ -368,6 +371,7 @@
         "tags": [
           "Admin"
         ],
+        "summary": "Delete user and ip addresses belong to it",
         "description": "Delete user and ip addresses belong to it",
         "parameters": [
           {
