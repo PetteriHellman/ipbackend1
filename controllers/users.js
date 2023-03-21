@@ -6,7 +6,8 @@ const auth = require('../utils/auth')
 
 usersRouter.post('/', async (request, response) => {
   /*
-  #swagger.tags = ['User']
+  #swagger.tags = ['Register']
+  #swagger.summary = 'Create new user'
   #swagger.description = 'Create new user'
   */
   const { email, name, password, group } = request.body
@@ -30,7 +31,9 @@ usersRouter.post('/', async (request, response) => {
 usersRouter.get('/',auth, async (request, response) => {
   /*
   #swagger.tags = ['Admin']
+  #swagger.summary = 'Get all users'
   #swagger.description = 'Get all users'
+  #swagger.security = [{"bearerAuth": []}]
   */
   if (request.decodedToken.role == 'admin'){
     const users = await User
@@ -45,7 +48,9 @@ usersRouter.get('/',auth, async (request, response) => {
 usersRouter.get('/user',auth, async (request, response) => {
   /*
   #swagger.tags = ['User']
+  #swagger.summary = 'Get user'
   #swagger.description = 'Get user'
+  #swagger.security = [{"bearerAuth": []}]
   */
   const user = await User.findById(request.decodedToken.id).populate('ips', { ip: 1, desc: 1, expirationDate: 1, createdAt: 1 })
   if (user) {
@@ -59,7 +64,9 @@ usersRouter.get('/user',auth, async (request, response) => {
 usersRouter.delete('/:id',auth, async (request, response) => {
   /*
   #swagger.tags = ['Admin']
+  #swagger.summary = 'Delete user and ip addresses belong to it'
   #swagger.description = 'Delete user and ip addresses belong to it'
+  #swagger.security = [{"bearerAuth": []}]
   */
   const decodedToken = request.decodedToken
   if (decodedToken.role !== 'admin') {

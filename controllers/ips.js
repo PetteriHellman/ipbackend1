@@ -14,7 +14,9 @@ const ip = require('ip')
 ipsRouter.get('/', auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
+  #swagger.summary = 'Endpoint for get all IP address for admins.'
   #swagger.description = 'Endpoint for get all IP address for admins.'
+  #swagger.security = [{"bearerAuth": []}]
   */
   const decodedToken = request.decodedToken
   if (decodedToken.role === 'admin') {
@@ -29,7 +31,9 @@ ipsRouter.get('/', auth, async (request, response) => {
 ipsRouter.post('/', auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
+  #swagger.summary = 'Endpoint for save IP address for admins.'
   #swagger.description = 'Endpoint for save IP address for admins.'
+  #swagger.security = [{"bearerAuth": []}]
   */
   if (request.decodedToken.role == 'admin') {
     //Tallennetaan pyynnön body muuttujaan
@@ -71,39 +75,42 @@ const randomIP = (hostMin, hostMax, network) => {
 }
 
 //haetaan seuraava vapaa viereikkäin oleva IP-blokki 
-const nextFreeIPBlock = (amount, network, taken) => {
-  const max = ip.toLong(network.hostMax)
-  const min = ip.toLong(network.hostMin)
+const nextFreeIPBlock = (network, taken, size, role) => {
+    const max = ip.toLong(network.hostMax)
+    const min = ip.toLong(network.hostMin)
 
-  if (amount < 1 || amount > 5) amount = 1; //tarkistus, että haetaan vain 1-5 IP:tä
+    //tarkistus, että haetaan vain 1-5 IP:tä, jos hakijana käyttäjä
+    if (role === 'user' && (size < 1 || size > 5)) throw new Error('Invalid amount requested as ' + role);
 
   let start = 0;
   let possible;
   let i
 
-  for (i = min; i < max; i++) {
-    if (!taken.includes(i)) {
-      start++;
-      if (start == 1) possible = i;
-      //console.log(start);
+    for (i = min; i < max; i++) 
+    {
+        if (!taken.includes(i)) 
+        {
+            start++;
+            if(start==1) possible = i;
+            //console.log(start);
+        } 
+        else start = 0;
+        if (start == size)
+        {
+            return Array(size).fill().map((_, index) => intToIP(possible + index))
+        }
     }
-    else start = 0;
-    if (start == amount) {
-      return Array(amount).fill().map((_, index) => intToIP(possible + index))
-    }
-  }
-  return false;
+    throw new Error('Not enough free contiguous IP addresses at given block size');
 }
 
-const getNextIp = (taken, amount) => {
+const getNextIp = (networkId, taken, amount, role) => {
   //Etsitään verkkon tiedot kannasta
   return Network.findOne({networkActive: true})
     .then(network => {
       if (!network) {
         throw new Error('Network not found')
       }
-      return nextFreeIPBlock(amount, network, taken)
-      
+      return nextFreeIPBlock(network, taken, amount, role);
     })
 }
 
@@ -111,7 +118,9 @@ const getNextIp = (taken, amount) => {
 ipsRouter.post('/next-ip',auth, async (request, response, next) => {
   /*
   #swagger.tags = ['Autogen IP address']
+  #swagger.summary = 'Endpoint for provide next free IP address.'
   #swagger.description = 'Endpoint for provide next free IP address.'
+  #swagger.security = [{"bearerAuth": []}]
   */
   const body = request.body
   const amount = body.amount
@@ -125,7 +134,7 @@ ipsRouter.post('/next-ip',auth, async (request, response, next) => {
     return response.status(400).json({ message: 'Active network not found' })
   }
   //Kutsutaan getNextIp funktiota
-  getNextIp(networkActivity, taken, amount)
+  getNextIp(body.networkId, taken, amount, user.role)
     .then(async ipAddress => {
       //const expireDate = Date.now() + body.TTL * 86400 * 1000
       //Asetetaan aika ensiksi 10 minuutiksi ja päivitetään oikea aika sitten vasta kun käyttäjä hyväksyy IP:n
@@ -151,7 +160,7 @@ ipsRouter.post('/next-ip',auth, async (request, response, next) => {
       response.status(201).json({ message: 'Uusi IP-osoite luotu', savedIP })
     })
     .catch(error => {
-      response.status(500).json({ message: 'Internal server error' })
+      response.status(500).json({ message: 'Internal server error: '+ error.message })
       next(error)
     })
 })
@@ -160,7 +169,9 @@ ipsRouter.post('/next-ip',auth, async (request, response, next) => {
 ipsRouter.put('/next-ip/:id',auth, async (request, response, next) => {
   /*
   #swagger.tags = ['Autogen IP address']
+  #swagger.summary = 'Endpoint for provide next free IP address confirm.'
   #swagger.description = 'Endpoint for provide next free IP address confirm.'
+  #swagger.security = [{"bearerAuth": []}]
   */
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen
@@ -185,7 +196,9 @@ ipsRouter.put('/next-ip/:id',auth, async (request, response, next) => {
 ipsRouter.get('/:id',auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
+  #swagger.summary = 'Endpoint for get single IP address.'
   #swagger.description = 'Endpoint for get single IP address.'
+  #swagger.security = [{"bearerAuth": []}]
   */
   const ip = await IPs.findById(request.params.id)
   if (ip) {
@@ -199,7 +212,9 @@ ipsRouter.get('/:id',auth, async (request, response) => {
 ipsRouter.delete('/:id',auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
+  #swagger.summary = 'Endpoint for delete single IP address.'
   #swagger.description = 'Endpoint for delete single IP address.'
+  #swagger.security = [{"bearerAuth": []}]
   */
   await IPs.findByIdAndRemove(request.params.id)
   response.status(204).end()
@@ -209,7 +224,9 @@ ipsRouter.delete('/:id',auth, async (request, response) => {
 ipsRouter.put('/:id',auth, async (request, response, next) => {
   /*
   #swagger.tags = ['IP address']
+  #swagger.summary = 'Endpoint for edit single IP address and/or description.'
   #swagger.description = 'Endpoint for edit single IP address and/or description.'
+  #swagger.security = [{"bearerAuth": []}]
   */
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen
