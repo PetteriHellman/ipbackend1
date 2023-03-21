@@ -3,7 +3,7 @@ const IPs = require('../models/ip')
 const User = require('../models/user')
 const Network = require('../models/network')
 const auth = require('../utils/auth')
-const ipblocks = require('ip-blocks')
+// const ipblocks = require('ip-blocks')
 const ip = require('ip')
 
 //haetaan kaikki IP-osoitteet adminille
@@ -59,16 +59,16 @@ ipsRouter.post('/', auth, async (request, response) => {
   }
 })
 
-const randomIP = (hostMin, hostMax, network) => {
-  //Lasketaan kaikkien IP-osoitteiden määrä
-  const countIP = ip.toLong(hostMax) - ip.toLong(hostMin)
-  //Arvotaan IP-osoite annetuilla parametreilla
-  const ipArray = ipblocks(hostMin, network, Math.floor(Math.random() * countIP))
-  //Tehdään pisteillä erotettu stringi ipblocks:n palauttamasta arraysta
-  const ipString = ipArray.join('.')
-  //Palautetaan stringinä oleva ip osoite
-  return ipString
-}
+// const randomIP = (hostMin, hostMax, network) => {
+//   //Lasketaan kaikkien IP-osoitteiden määrä
+//   const countIP = ip.toLong(hostMax) - ip.toLong(hostMin)
+//   //Arvotaan IP-osoite annetuilla parametreilla
+//   const ipArray = ipblocks(hostMin, network, Math.floor(Math.random() * countIP))
+//   //Tehdään pisteillä erotettu stringi ipblocks:n palauttamasta arraysta
+//   const ipString = ipArray.join('.')
+//   //Palautetaan stringinä oleva ip osoite
+//   return ipString
+// }
 
 //haetaan seuraava vapaa viereikkäin oleva IP-blokki 
 const nextFreeIPBlock = (network, taken, size, role) => {
@@ -76,24 +76,24 @@ const nextFreeIPBlock = (network, taken, size, role) => {
   const min = ip.toLong(network.hostMin)
 
   //tarkistus, että haetaan vain 1-5 IP:tä, jos hakijana käyttäjä
-  if (role === 'user' && (size < 1 || size > 5)) throw new Error('Invalid amount requested as ' + role);
+  if (role === 'user' && (size < 1 || size > 5)) throw new Error('Invalid amount requested as ' + role)
 
-  let start = 0;
-  let possible;
+  let start = 0
+  let possible
   let i
 
   for (i = min; i < max; i++) {
     if (!taken.includes(i)) {
-      start++;
-      if (start == 1) possible = i;
+      start++
+      if (start == 1) possible = i
       //console.log(start);
     }
-    else start = 0;
+    else start = 0
     if (start == size) {
       return Array(size).fill().map((_, index) => intToIP(possible + index))
     }
   }
-  throw new Error('Not enough free contiguous IP addresses at given block size');
+  throw new Error('Not enough free contiguous IP addresses at given block size')
 }
 
 const getNextIp = (taken, amount, role) => {
@@ -103,7 +103,7 @@ const getNextIp = (taken, amount, role) => {
       if (!network) {
         throw new Error('Network not found')
       }
-      return nextFreeIPBlock(network, taken, amount, role);
+      return nextFreeIPBlock(network, taken, amount, role)
     })
 }
 
@@ -118,7 +118,7 @@ ipsRouter.post('/next-ip', auth, async (request, response, next) => {
   const body = request.body
   const amount = body.amount
   //Haetaan kaikki jo varatut IP:t
-  const taken = (await IPs.find({})).map((item) => (ip.toLong(item.ip)));
+  const taken = (await IPs.find({})).map((item) => (ip.toLong(item.ip)))
   //Otetaan kirjautuneen käyttäjän tiedot talteen
   const user = await User.findById(request.decodedToken.id)
   //checking if active
@@ -132,7 +132,7 @@ ipsRouter.post('/next-ip', auth, async (request, response, next) => {
       //const expireDate = Date.now() + body.TTL * 86400 * 1000
       //Asetetaan aika ensiksi 10 minuutiksi ja päivitetään oikea aika sitten vasta kun käyttäjä hyväksyy IP:n
       const expireDate = Date.now() + 600 * 1000
-      const ip = [];
+      const ip = []
       ipAddress.forEach(e => { //pusketaan haetut IP:t (string) muotoiltuun objekti-taulukkoon (IPs)
         ip.push(new IPs({
           desc: body.desc,
@@ -140,12 +140,12 @@ ipsRouter.post('/next-ip', auth, async (request, response, next) => {
           user: user._id,
           expirationDate: expireDate,
         }))
-      });
+      })
       //Varataan IP-osoitteet käyttöön
       const savedIP = await IPs.insertMany(ip)
       savedIP.forEach((e) => {
         user.ips.push(e._id)
-      });
+      })
 
       //user.ips = user.ips.concat(savedIP._id)
       await user.save()
@@ -239,12 +239,12 @@ ipsRouter.put('/:id', auth, async (request, response, next) => {
 })
 
 function intToIP(int) {
-  var part1 = int & 255;
-  var part2 = ((int >> 8) & 255);
-  var part3 = ((int >> 16) & 255);
-  var part4 = ((int >> 24) & 255);
+  var part1 = int & 255
+  var part2 = ((int >> 8) & 255)
+  var part3 = ((int >> 16) & 255)
+  var part4 = ((int >> 24) & 255)
 
-  return part4 + "." + part3 + "." + part2 + "." + part1;
+  return part4 + '.' + part3 + '.' + part2 + '.' + part1
 }
 
 module.exports = ipsRouter
