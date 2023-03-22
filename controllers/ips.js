@@ -238,7 +238,7 @@ ipsRouter.put('/:id', auth, async (request, response, next) => {
     .catch(error => next(error))
 })
 
-ipsRouter.delete('/', auth, async (request, response) => {
+ipsRouter.delete('/bulkdelete', auth, async (request, response) => {
 
   const decodedToken = request.decodedToken
   if (decodedToken.role === 'admin') {
