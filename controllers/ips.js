@@ -30,6 +30,26 @@ ipsRouter.post('/', auth, async (request, response) => {
   #swagger.summary = 'Endpoint for save IP address for admins.'
   #swagger.description = 'Endpoint for save IP address for admins.'
   #swagger.security = [{"bearerAuth": []}]
+ 
+  #swagger.parameters['ip','desc','TTL'] = {
+        in: 'body',
+        description: {
+          $ip: 'IP address',
+          $desc: 'Description for IP address',
+          $TTL: 'TTL (Time-to-Live) value for IP address in days'
+        },
+        required: 'true',
+        type: {
+          $ip: 'string',
+          $desc: 'string',
+          $TTL: 'number'
+        },
+        schema: {
+          $ip: '192.168.0.1',
+          $desc: 'Some description',
+          $TTL: 1,
+        }
+  }
   */
   if (request.decodedToken.role == 'admin') {
     //Tallennetaan pyynnön body muuttujaan
@@ -114,6 +134,22 @@ ipsRouter.post('/next-ip', auth, async (request, response, next) => {
   #swagger.summary = 'Endpoint for provide next free IP address.'
   #swagger.description = 'Endpoint for provide next free IP address.'
   #swagger.security = [{"bearerAuth": []}]
+  #swagger.parameters['desc','amount'] = {
+        in: 'body',
+        description: {
+          $desc: 'Description for IP address',
+          $amount: 'Amount of ip addresses needed'
+        },
+        required: 'true',
+        type: {
+          $desc: 'string',
+          $amount: 'number'
+        },
+        schema: {
+          $desc: 'Some description',
+          $amount: 1,
+        }
+  }
   */
   const body = request.body
   const amount = body.amount
@@ -165,6 +201,22 @@ ipsRouter.put('/next-ip/:id', auth, async (request, response, next) => {
   #swagger.summary = 'Endpoint for provide next free IP address confirm.'
   #swagger.description = 'Endpoint for provide next free IP address confirm.'
   #swagger.security = [{"bearerAuth": []}]
+  #swagger.parameters['desc','TTL'] = {
+        in: 'body',
+        description: {
+          $desc: 'Description for IP address',
+          $TTL: 'TTL (Time-to-Live) value for IP address in days',
+        },
+        required: 'true',
+        type: {
+          $desc: 'string',
+          $TTL: 'number'
+        },
+        schema: {
+          $desc: 'Some description',
+          $TTL: 1,
+        }
+  }
   */
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen
@@ -220,6 +272,21 @@ ipsRouter.put('/:id', auth, async (request, response, next) => {
   #swagger.summary = 'Endpoint for edit single IP address and/or description.'
   #swagger.description = 'Endpoint for edit single IP address and/or description.'
   #swagger.security = [{"bearerAuth": []}]
+  #swagger.parameters['desc','ip'] = {
+        in: 'body',
+        description: {
+          $desc: 'New description for IP address',
+          $ip: 'IP address what you want edit',
+        },
+        type: {
+          $desc: 'string',
+          $ip: 'string'
+        },
+        schema: {
+          $desc: 'Some new description',
+          $ip: '192.168.0.2',
+        }
+  }
   */
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen

@@ -9,6 +9,30 @@ networkRouter.post('/',auth, async (request, response) => {
   #swagger.summary = 'Endpoint for make a new network'
   #swagger.description = 'Endpoint for make a new network'
   #swagger.security = [{"bearerAuth": []}]
+  #swagger.parameters['networkName','hostMin','hostMax','hostNetwork','networkActive'] = {
+        in: 'body',
+        description: {
+          $networkName: 'Name for network',
+          $hostMin: 'Min IP address for range of hosted IP address',
+          $hostMax: 'Max IP address for range of hosted IP address',
+          $hostNetwork: 'Subnet for host network without / mark',
+          $networkActive: 'True or false if this netwoork is active'
+        },
+        type: {
+          $name: 'string',
+          $hostMin: 'string',
+          $hostMax: 'string',
+          $hostNetwork: 'number',
+          $networkActive: 'boolean'
+        },
+        schema: {
+          $networkName: 'SomeNetwork',
+          $hostMin: '192.168.0.100',
+          $hostMax: '192.168.0.200',
+          $hostNetwork: 24,
+          $networkActive: true
+        }
+  }
   */
   const body = request.body
   

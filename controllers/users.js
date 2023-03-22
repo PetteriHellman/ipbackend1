@@ -9,6 +9,27 @@ usersRouter.post('/', async (request, response) => {
   #swagger.tags = ['Register']
   #swagger.summary = 'Endpoint for create a new user'
   #swagger.description = 'Endpoint for create a new user'
+  #swagger.parameters['email','name','password','group'] = {
+        in: 'body',
+        required: {
+          $email: 'true',
+          $name: 'true',
+          $password: 'true'
+
+        },
+        description: {
+          $email: 'Email for user',
+          $name: 'Name for user',
+          $password: 'Password for user',
+          $group: 'Group for user'
+        },
+        type: 'string',
+        schema: {
+          $email: 'joh.doe@email.com',
+          $name: 'John Doe',
+          $password: '12345678',
+        }
+  }
   */
   const { email, name, password, group } = request.body
 
