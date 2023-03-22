@@ -290,8 +290,8 @@
         "tags": [
           "Register"
         ],
-        "summary": "Create new user",
-        "description": "Create new user",
+        "summary": "Endpoint for create a new user",
+        "description": "Endpoint for create a new user",
         "parameters": [],
         "responses": {
           "201": {
@@ -326,8 +326,8 @@
         "tags": [
           "Admin"
         ],
-        "summary": "Get all users",
-        "description": "Get all users",
+        "summary": "Endpoint for get all users",
+        "description": "Endpoint for get all users",
         "parameters": [],
         "responses": {
           "200": {
@@ -352,8 +352,8 @@
         "tags": [
           "User"
         ],
-        "summary": "Get user",
-        "description": "Get user",
+        "summary": "Endpoint for get user",
+        "description": "Endpoint for get user",
         "parameters": [],
         "responses": {
           "200": {
@@ -378,8 +378,8 @@
         "tags": [
           "Admin"
         ],
-        "summary": "Delete user and ip addresses belong to it",
-        "description": "Delete user and ip addresses belong to it",
+        "summary": "Endpoint for delete user and ip addresses belong to it",
+        "description": "Endpoint for delete user and ip addresses belong to it",
         "parameters": [
           {
             "name": "id",
@@ -407,7 +407,11 @@
     },
     "/api/users/{id}/role": {
       "put": {
-        "description": "",
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Endpoint for change role",
+        "description": "Endpoint for change role",
         "parameters": [
           {
             "name": "id",
@@ -432,6 +436,11 @@
             "description": "Not Found"
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -450,7 +459,11 @@
     },
     "/api/users/passwordChange/": {
       "post": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "summary": "Endpoint for change user passwords.",
+        "description": "Endpoint for change user passwords.",
         "parameters": [],
         "responses": {
           "200": {
@@ -466,6 +479,11 @@
             "description": "Internal Server Error"
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -525,8 +543,8 @@
         "tags": [
           "Network"
         ],
-        "summary": "Make new network",
-        "description": "Make new network",
+        "summary": "Endpoint for make a new network",
+        "description": "Endpoint for make a new network",
         "parameters": [],
         "responses": {
           "201": {
@@ -572,8 +590,8 @@
         "tags": [
           "Network"
         ],
-        "summary": "Get all networks",
-        "description": "Get all networks",
+        "summary": "Endpoint for get all networks",
+        "description": "Endpoint for get all networks",
         "parameters": [],
         "responses": {
           "200": {
@@ -592,7 +610,11 @@
     },
     "/api/admin/network/{id}": {
       "put": {
-        "description": "",
+        "tags": [
+          "Network"
+        ],
+        "summary": "Endpoint for make network active",
+        "description": "Endpoint for make network active",
         "parameters": [
           {
             "name": "id",
@@ -614,6 +636,11 @@
             "description": "Unauthorized"
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -635,8 +662,8 @@
         "tags": [
           "Admin"
         ],
-        "summary": "Endpoint for change user passwords.",
-        "description": "Endpoint for change user passwords.",
+        "summary": "Endpoint for change anyone passwords.",
+        "description": "Endpoint for change anyone passwords.",
         "parameters": [
           {
             "name": "id",

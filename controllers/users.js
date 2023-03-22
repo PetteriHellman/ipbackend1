@@ -7,8 +7,8 @@ const auth = require('../utils/auth')
 usersRouter.post('/', async (request, response) => {
   /*
   #swagger.tags = ['Register']
-  #swagger.summary = 'Create new user'
-  #swagger.description = 'Create new user'
+  #swagger.summary = 'Endpoint for create a new user'
+  #swagger.description = 'Endpoint for create a new user'
   */
   const { email, name, password, group } = request.body
 
@@ -31,8 +31,8 @@ usersRouter.post('/', async (request, response) => {
 usersRouter.get('/',auth, async (request, response) => {
   /*
   #swagger.tags = ['Admin']
-  #swagger.summary = 'Get all users'
-  #swagger.description = 'Get all users'
+  #swagger.summary = 'Endpoint for get all users'
+  #swagger.description = 'Endpoint for get all users'
   #swagger.security = [{"bearerAuth": []}]
   */
   if (request.decodedToken.role == 'admin'){
@@ -48,8 +48,8 @@ usersRouter.get('/',auth, async (request, response) => {
 usersRouter.get('/user',auth, async (request, response) => {
   /*
   #swagger.tags = ['User']
-  #swagger.summary = 'Get user'
-  #swagger.description = 'Get user'
+  #swagger.summary = 'Endpoint for get user'
+  #swagger.description = 'Endpoint for get user'
   #swagger.security = [{"bearerAuth": []}]
   */
   const user = await User.findById(request.decodedToken.id).populate('ips', { ip: 1, desc: 1, expirationDate: 1, createdAt: 1 })
@@ -64,8 +64,8 @@ usersRouter.get('/user',auth, async (request, response) => {
 usersRouter.delete('/:id',auth, async (request, response) => {
   /*
   #swagger.tags = ['Admin']
-  #swagger.summary = 'Delete user and ip addresses belong to it'
-  #swagger.description = 'Delete user and ip addresses belong to it'
+  #swagger.summary = 'Endpoint for delete user and ip addresses belong to it'
+  #swagger.description = 'Endpoint for delete user and ip addresses belong to it'
   #swagger.security = [{"bearerAuth": []}]
   */
   const decodedToken = request.decodedToken
@@ -82,6 +82,12 @@ usersRouter.delete('/:id',auth, async (request, response) => {
 })
 
 usersRouter.put('/:id/role', auth, async (request, response) => {
+  /*
+  #swagger.tags = ['Admin']
+  #swagger.summary = 'Endpoint for change role'
+  #swagger.description = 'Endpoint for change role'
+  #swagger.security = [{"bearerAuth": []}]
+  */
   
   const decodedToken = request.decodedToken
   if (decodedToken.role !== 'admin') {

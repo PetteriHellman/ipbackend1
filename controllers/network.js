@@ -6,8 +6,8 @@ const auth = require('../utils/auth')
 networkRouter.post('/',auth, async (request, response) => {
   /*
   #swagger.tags = ['Network']
-  #swagger.summary = 'Make new network'
-  #swagger.description = 'Make new network'
+  #swagger.summary = 'Endpoint for make a new network'
+  #swagger.description = 'Endpoint for make a new network'
   #swagger.security = [{"bearerAuth": []}]
   */
   const body = request.body
@@ -28,8 +28,8 @@ networkRouter.post('/',auth, async (request, response) => {
 networkRouter.get('/',auth, async (request, response) => {
   /*
   #swagger.tags = ['Network']
-  #swagger.summary = 'Get all networks'
-  #swagger.description = 'Get all networks'
+  #swagger.summary = 'Endpoint for get all networks'
+  #swagger.description = 'Endpoint for get all networks'
   #swagger.security = [{"bearerAuth": []}]
   */
   const network = await Network
@@ -40,6 +40,12 @@ networkRouter.get('/',auth, async (request, response) => {
 
 //update networkActive
 networkRouter.put('/:id', auth, async (request, response) => {
+  /*
+  #swagger.tags = ['Network']
+  #swagger.summary = 'Endpoint for make network active'
+  #swagger.description = 'Endpoint for make network active'
+  #swagger.security = [{"bearerAuth": []}]
+  */
   const { id } = request.params
   const { networkActive } = request.body
 
