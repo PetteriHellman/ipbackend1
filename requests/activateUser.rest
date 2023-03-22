@@ -1,6 +1,6 @@
 PUT http://localhost:3001/api/users/641afda02d4e001084684b8c/role
 Content-Type: application/json
-Authorization: Bearer 
+Authorization: Bearer //test change
 
 {
   "role" : "user"
