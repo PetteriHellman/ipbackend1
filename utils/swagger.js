@@ -21,7 +21,14 @@ const doc = {
       }
     }
   },
-  definitions: {},          // by default: empty object (Swagger 2.0)
+  definitions: {
+    role: {
+      '@enum': [
+        'admin',
+        'user'
+      ]
+    }
+  },          // by default: empty object (Swagger 2.0)
 }
 
 const outputFile = './docs/swagger-output.json'

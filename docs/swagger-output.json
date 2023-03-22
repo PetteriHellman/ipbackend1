@@ -569,6 +569,16 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "role",
+            "in": "body",
+            "description": {
+              "$role": "Admin or user role"
+            },
+            "schema": {
+              "$ref": "#/components/schemas/role"
+            }
           }
         ],
         "responses": {
@@ -723,18 +733,13 @@
                 "hostNetwork": {
                   "type": "number",
                   "example": 24
-                },
-                "networkActive": {
-                  "type": "boolean",
-                  "example": true
                 }
               },
               "required": [
                 "networkName",
                 "hostMin",
                 "hostMax",
-                "hostNetwork",
-                "networkActive"
+                "hostNetwork"
               ]
             }
           }
@@ -909,6 +914,15 @@
         "description": "Bearer Token",
         "scheme": "bearer",
         "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "role": {
+        "type": "string",
+        "enum": [
+          "admin",
+          "user"
+        ]
       }
     }
   }

@@ -108,8 +108,20 @@ usersRouter.put('/:id/role', auth, async (request, response) => {
   #swagger.summary = 'Endpoint for change role'
   #swagger.description = 'Endpoint for change role'
   #swagger.security = [{"bearerAuth": []}]
+  #swagger.parameters['role'] = {
+    in: 'body',
+    description: {
+      $role: 'Admin or user role'
+      },
+      type: {
+        $role: 'string',
+      },
+      schema: {
+        '$ref': '#/definitions/role'
+      }
+  }
   */
-  
+
   const decodedToken = request.decodedToken
   if (decodedToken.role !== 'admin') {
     return response.status(401).json({ error: 'unauthorized' })

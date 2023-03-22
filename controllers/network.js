@@ -30,7 +30,6 @@ networkRouter.post('/',auth, async (request, response) => {
           $hostMin: '192.168.0.100',
           $hostMax: '192.168.0.200',
           $hostNetwork: 24,
-          $networkActive: true
         }
   }
   */
