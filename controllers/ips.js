@@ -3,7 +3,6 @@ const IPs = require('../models/ip')
 const User = require('../models/user')
 const Network = require('../models/network')
 const auth = require('../utils/auth')
-// const ipblocks = require('ip-blocks')
 const ip = require('ip')
 
 //haetaan kaikki IP-osoitteet adminille
@@ -78,17 +77,6 @@ ipsRouter.post('/', auth, async (request, response) => {
     response.status(404).end()
   }
 })
-
-// const randomIP = (hostMin, hostMax, network) => {
-//   //Lasketaan kaikkien IP-osoitteiden määrä
-//   const countIP = ip.toLong(hostMax) - ip.toLong(hostMin)
-//   //Arvotaan IP-osoite annetuilla parametreilla
-//   const ipArray = ipblocks(hostMin, network, Math.floor(Math.random() * countIP))
-//   //Tehdään pisteillä erotettu stringi ipblocks:n palauttamasta arraysta
-//   const ipString = ipArray.join('.')
-//   //Palautetaan stringinä oleva ip osoite
-//   return ipString
-// }
 
 //haetaan seuraava vapaa viereikkäin oleva IP-blokki 
 const nextFreeIPBlock = (network, taken, size, role) => {
@@ -253,18 +241,36 @@ ipsRouter.get('/:id', auth, async (request, response) => {
   }
 })
 
-//Poistetaan IP-osoite
-ipsRouter.delete('/:id', auth, async (request, response) => {
+// delete IP address by id
+ipsRouter.delete('/', auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
-  #swagger.summary = 'Endpoint for delete single IP address.'
-  #swagger.description = 'Endpoint for delete single IP address.'
+  #swagger.summary = 'Endpoint for delete IP addresses.'
+  #swagger.description = 'Endpoint for delete IP addresses.'
   #swagger.security = [{"bearerAuth": []}]
   */
-  await IPs.findByIdAndRemove(request.params.id)
-  response.status(204).end()
-})
+  const decodedToken = request.decodedToken
+  const ipIds = request.body.ids
 
+  try {
+    if (decodedToken.role === 'admin') {
+      // remove IPs from IP model
+      await IPs.deleteMany({ _id: { $in: ipIds } })
+
+      // remove IP ids from user's ips array
+      await User.updateMany(
+        { ips: { $in: ipIds } },
+        { $pull: { ips: { $in: ipIds } } }
+      )
+
+      response.status(204).end()
+    } else {
+      return response.status(401).json({ error: 'unauthorized' })
+    }
+  } catch (error) {
+    next(error)
+  }
+})
 //Muokataan IP-osoitetta ja/tai kuvausta
 ipsRouter.put('/:id', auth, async (request, response, next) => {
   /*

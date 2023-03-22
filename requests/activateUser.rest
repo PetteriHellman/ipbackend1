@@ -1,6 +1,6 @@
-PUT http://localhost:3001/api/users/64198dccd29f42ce294aafdc/role
+PUT http://localhost:3001/api/users/641afda02d4e001084684b8c/role
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlkIjoiNjQxMmRhYzYwZWM1ZDRlYTNlZGNkNDgxIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc5Mzk4OTAwLCJleHAiOjE2Nzk0MDI1MDB9.ZPzwGN2aF2DJvsd3aUHGQ4mHbP6GGmV8DUP6rZdjUvY
+Authorization: Bearer 
 
 {
   "role" : "user"

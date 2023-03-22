@@ -1,4 +1,4 @@
-DELETE http://localhost:3001/api/ips/640eebc4a515ff4f59567ec0
+DELETE http://localhost:3001/api/ips/641ad7654e1a19336acadd4a
 
 Content-Type: application/json
 Authorization: Bearer 

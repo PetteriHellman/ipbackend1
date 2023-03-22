@@ -1,6 +1,6 @@
 POST http://localhost:3001/api/ips/next-ip
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI2NDE5N2UzOWM3YjM4ZDk5MGNiNWY0NGEiLCJyb2xlIjoidXNlciIsImlhdCI6MTY3OTM5MjMzNCwiZXhwIjoxNjc5Mzk1OTM0fQ.U98MlgFTJcvaFw1xNxJ7PTYJosiSAVeYgBqUzbAzlbo
+Authorization: Bearer 
 
 {
   "amount": 5,
