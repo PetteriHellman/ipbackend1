@@ -201,15 +201,24 @@ ipsRouter.get('/:id', auth, async (request, response) => {
   }
 })
 
-//Poistetaan IP-osoite
-ipsRouter.delete('/:id', auth, async (request, response) => {
+// Poistetaan IP-osoitteita
+ipsRouter.delete('/', auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
-  #swagger.summary = 'Endpoint for delete single IP address.'
-  #swagger.description = 'Endpoint for delete single IP address.'
+  #swagger.summary = 'Endpoint for delete multiple IP addresses.'
+  #swagger.description = 'Endpoint for delete multiple IP addresses.'
   #swagger.security = [{"bearerAuth": []}]
   */
-  await IPs.findByIdAndRemove(request.params.id)
+  const { ids } = request.body
+  if (!ids || !Array.isArray(ids)) {
+    response.status(400).json({ error: 'Invalid input' })
+    return
+  }
+
+  for (const id of ids) {
+    await IPs.findByIdAndRemove(id)
+  }
+
   response.status(204).end()
 })
 
@@ -236,18 +245,6 @@ ipsRouter.put('/:id', auth, async (request, response, next) => {
       response.json(updatedIP)
     })
     .catch(error => next(error))
-})
-
-ipsRouter.delete('/bulkdelete', auth, async (request, response) => {
-
-  const decodedToken = request.decodedToken
-  if (decodedToken.role === 'admin') {
-    const ipsToDelete = request.body.ips
-    const result = await IPs.deleteMany({ _id: { $in: ipsToDelete } })
-    response.status(200).json({ message: `${result.deletedCount} IP address(es) deleted.` })
-  } else {
-    response.status(401).json({ error: 'unauthorized' })
-  }
 })
 
 function intToIP(int) {
