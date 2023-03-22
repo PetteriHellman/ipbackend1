@@ -1,0 +1,20 @@
+DELETE http://localhost:3001/api/ips/bulkdelete
+Content-Type: application/json
+Authorization: Bearer 
+
+{
+  "ips": [
+    {
+      "_id": "641ad7654e1a19336acadd48",
+      "ip": "192.168.0.2"
+    },
+    {
+      "_id": "641ad7654e1a19336acadd4a",
+      "ip": "192.168.0.4"
+    },
+    {
+      "_id": "641ad7654e1a19336acadd4b",
+      "ip": "192.168.0.5"
+    }
+  ]
+}

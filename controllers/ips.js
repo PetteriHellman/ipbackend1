@@ -238,6 +238,18 @@ ipsRouter.put('/:id', auth, async (request, response, next) => {
     .catch(error => next(error))
 })
 
+ipsRouter.delete('/', auth, async (request, response) => {
+
+  const decodedToken = request.decodedToken
+  if (decodedToken.role === 'admin') {
+    const ipsToDelete = request.body.ips
+    const result = await IPs.deleteMany({ _id: { $in: ipsToDelete } })
+    response.status(200).json({ message: `${result.deletedCount} IP address(es) deleted.` })
+  } else {
+    response.status(401).json({ error: 'unauthorized' })
+  }
+})
+
 function intToIP(int) {
   var part1 = int & 255
   var part2 = ((int >> 8) & 255)
