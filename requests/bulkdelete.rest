@@ -1,11 +1,11 @@
 DELETE http://localhost:3001/api/ips/
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer 
 
 {
   "ids": [
-    "641af4ece4e2cf1434d442fa",
-    "641af4ece4e2cf1434d442fb",
-    "641af4ece4e2cf1434d442fc"
+    "641afddf2d4e001084684b97",
+    "641afddf2d4e001084684b98",
+    "641afddf2d4e001084684b99"
   ]
 }
