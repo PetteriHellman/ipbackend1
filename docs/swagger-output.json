@@ -571,7 +571,7 @@
         ]
       }
     },
-    "/api/users/{userid}": {
+    "/api/users/{userId}": {
       "get": {
         "tags": [
           "User"
@@ -580,7 +580,7 @@
         "description": "Endpoint for get user",
         "parameters": [
           {
-            "name": "userid",
+            "name": "userId",
             "in": "path",
             "required": true,
             "schema": {
@@ -604,9 +604,7 @@
             "bearerAuth": []
           }
         ]
-      }
-    },
-    "/api/users/{id}": {
+      },
       "delete": {
         "tags": [
           "Admin"
@@ -615,7 +613,7 @@
         "description": "Endpoint for delete user and ip addresses belong to it",
         "parameters": [
           {
-            "name": "id",
+            "name": "userId",
             "in": "path",
             "required": true,
             "schema": {
@@ -638,7 +636,7 @@
         ]
       }
     },
-    "/api/users/{id}/role": {
+    "/api/users/{userId}/role": {
       "put": {
         "tags": [
           "Admin"
@@ -647,7 +645,7 @@
         "description": "Endpoint for change role",
         "parameters": [
           {
-            "name": "id",
+            "name": "userId",
             "in": "path",
             "required": true,
             "schema": {

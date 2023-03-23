@@ -65,7 +65,7 @@ usersRouter.get('/', auth, async (request, response) => {
   }
 })
 
-usersRouter.get('/:userid', auth, async (request, response) => {
+usersRouter.get('/:userId', auth, async (request, response) => {
   /*
   #swagger.tags = ['User']
   #swagger.summary = 'Endpoint for get user'
@@ -73,8 +73,8 @@ usersRouter.get('/:userid', auth, async (request, response) => {
   #swagger.security = [{"bearerAuth": []}]
   */
   const decodedToken = request.decodedToken
-  if (request.params.userid === decodedToken.id || decodedToken.role === 'admin') {
-    const ips = await User.findById(request.params.userid)
+  if (request.params.userId === decodedToken.id || decodedToken.role === 'admin') {
+    const ips = await User.findById(request.params.userId)
     if (ips) {
       response.json(ips)
     } else {
@@ -84,7 +84,7 @@ usersRouter.get('/:userid', auth, async (request, response) => {
 })
 
 //Poistetaan käyttäjä
-usersRouter.delete('/:id',auth, async (request, response) => {
+usersRouter.delete('/:userId',auth, async (request, response) => {
   /*
   #swagger.tags = ['Admin']
   #swagger.summary = 'Endpoint for delete user and ip addresses belong to it'
@@ -95,7 +95,7 @@ usersRouter.delete('/:id',auth, async (request, response) => {
   if (decodedToken.role !== 'admin') {
     return response.status(401).json({ error: 'unauthorized' })
   }
-  const userId = request.params.id
+  const userId = request.params.userId
   //poistetaan IP-taulusta kyseisen käyttäjän kaikki IP:t
   await IPs.deleteMany({user: userId})
   
@@ -104,7 +104,7 @@ usersRouter.delete('/:id',auth, async (request, response) => {
   response.status(204).end()
 })
 
-usersRouter.put('/:id/role', auth, async (request, response) => {
+usersRouter.put('/:userId/role', auth, async (request, response) => {
   /*
   #swagger.tags = ['Admin']
   #swagger.summary = 'Endpoint for change role'
@@ -128,7 +128,7 @@ usersRouter.put('/:id/role', auth, async (request, response) => {
   if (decodedToken.role !== 'admin') {
     return response.status(401).json({ error: 'unauthorized' })
   }
-  const userId = request.params.id
+  const userId = request.params.userId
   const { role } = request.body
 
   if (!['user', 'admin'].includes(role)) {
