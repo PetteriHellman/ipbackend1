@@ -1,0 +1,14 @@
+PUT http://localhost:3001/api/ips
+Content-Type: application/json
+Authorization: Bearer 
+
+[
+  {
+    "_id": "641c0e08d3574276de382060",
+    "TTL": 3000
+  },
+  {
+    "_id": "641c0e08d3574276de382061",
+    "TTL": 6000
+  }
+]

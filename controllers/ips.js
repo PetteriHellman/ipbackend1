@@ -1,4 +1,5 @@
 const ipsRouter = require('express').Router()
+const mongoose = require('mongoose')
 const IPs = require('../models/ip')
 const User = require('../models/user')
 const Network = require('../models/network')
@@ -313,6 +314,41 @@ ipsRouter.put('/:id', auth, async (request, response, next) => {
     })
     .catch(error => next(error))
 })
+
+ipsRouter.put('/', auth, async (request, response) => {
+  /*
+  #swagger.tags = ['IP address']
+  #swagger.summary = 'Endpoint for bulk update IP TTL for admins.'
+  #swagger.description = 'Endpoint for bulk update IP TTL for admins.'
+  #swagger.security = [{"bearerAuth": []}]
+  */
+  const decodedToken = request.decodedToken
+  if (decodedToken.role === 'admin' || decodedToken.role === 'user') {
+    const ipsToUpdate = request.body
+
+    // Create an array of IP ids to be updated
+    const idsToUpdate = ipsToUpdate.map(ip => ip._id)
+
+    // Get the user to which the IPs belong
+    const user = await User.findById(decodedToken.id)
+
+    // Find the IPs to be updated
+    const ips = await IPs.find({ _id: { $in: idsToUpdate }, user: user._id })
+
+    // Update the TTL of each IP
+    ips.forEach(ip => {
+      const updatedIp = ipsToUpdate.find(item => mongoose.Types.ObjectId(item._id).equals(ip._id))
+      const expireDate = Date.now() + updatedIp.TTL * 86400 * 1000
+      ip.expirationDate = expireDate
+      ip.save()
+    })
+
+    response.json({ message: 'IPs updated successfully' })
+  } else {
+    return response.status(401).json({ error: 'unauthorized' })
+  }
+})
+
 
 function intToIP(int) {
   var part1 = int & 255
