@@ -86,13 +86,17 @@ ipsRouter.post('/', auth, async (request, response) => {
       user: user,
       expirationDate: expireDate,
     })
-    //Tallennetaan ip kantaan
-    const savedIP = await ip.save()
-    //Palautetaan tallennettu IP
-    response.status(201).json(savedIP)
+    try{
+      //Tallennetaan ip kantaan
+      const savedIP = await ip.save()
+      //Palautetaan tallennettu IP
+      response.status(201).json(savedIP)
+    } catch (error) {
+      response.status(400).json({message:'IP already taken'}).end()
+    }
   }
   else {
-    response.status(404).end()
+    response.status(404).json().end()
   }
 })
 
