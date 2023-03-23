@@ -263,10 +263,15 @@ ipsRouter.delete('/:ids', auth, async (request, response) => {
   try {
     const ipIds = request.params.ids.split(',')
     const userID = request.decodedToken.id
+    let query
 
-    const user = await User.findOne({ _id: userID })
-    const query = await IPs.find({ _id: { $in: ipIds }, user: user })
-
+    if(request.decodedToken.role !== 'admin')
+    {
+      const user = await User.findOne({ _id: userID })
+      query = await IPs.find({ _id: { $in: ipIds }, user: user })
+    } else {
+      query = await IPs.find({ _id: { $in: ipIds }})
+    }
     query.forEach(ip => ip.delete())
 
     response.status(204).end()
