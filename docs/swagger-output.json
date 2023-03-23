@@ -77,6 +77,9 @@
           "201": {
             "description": "Created"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -95,13 +98,48 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "TTL": {
-                    "example": "any"
-                  },
                   "ip": {
                     "example": "any"
                   },
                   "desc": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "IP address"
+        ],
+        "summary": "Endpoint for bulk update IP TTL for admins.",
+        "description": "Endpoint for bulk update IP TTL for admins.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "map(ip": {
+                    "example": "any"
+                  },
+                  "find(item": {
                     "example": "any"
                   }
                 }

@@ -7,8 +7,8 @@ const doc = {
   },
   host: 'localhost:3001',
   schemes: ['http'],
-  consumes: [],  // by default: ['application/json']
-  produces: [],  // by default: ['application/json']
+  consumes: ['application/json'],  // by default: ['application/json']
+  produces: ['application/json'],  // by default: ['application/json']
   components: {
     securitySchemes: {
       bearerAuth: {
