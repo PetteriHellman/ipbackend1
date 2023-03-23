@@ -1,4 +1,4 @@
-PUT http://localhost:3001/api/users/641afda02d4e001084684b8c/role
+PUT http://localhost:3001/api/users/641c08ffd3574276de382039/role
 Content-Type: application/json
 Authorization: Bearer 
 
