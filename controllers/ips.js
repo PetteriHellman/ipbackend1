@@ -22,6 +22,26 @@ ipsRouter.get('/', auth, async (request, response) => {
   }
 })
 
+//haetaan kaikki IP-osoitteet yhdelle käyttäjälle
+ipsRouter.get('/:userid',auth, async (request, response) => {
+  /*
+  #swagger.tags = ['IP address']
+  #swagger.summary = 'Endpoint for get IP'
+  #swagger.description = 'Endpoint for get IP'
+  #swagger.security = [{"bearerAuth": []}]
+  */
+  const decodedToken = request.decodedToken
+  if(decodedToken.id === request.params.userid || decodedToken.role === 'admin')
+  {
+    const ips = await IPs.find({user: request.params.userid})
+    if (ips) {
+      response.json(ips)
+    } else {
+      response.status(404).end()
+    }
+  } else response.status(401).end()
+})
+
 //tallennetaan ip osoite adminille
 ipsRouter.post('/', auth, async (request, response) => {
   /*
@@ -29,6 +49,26 @@ ipsRouter.post('/', auth, async (request, response) => {
   #swagger.summary = 'Endpoint for save IP address for admins.'
   #swagger.description = 'Endpoint for save IP address for admins.'
   #swagger.security = [{"bearerAuth": []}]
+ 
+  #swagger.parameters['ip','desc','TTL'] = {
+        in: 'body',
+        description: {
+          $ip: 'IP address',
+          $desc: 'Description for IP address',
+          $TTL: 'TTL (Time-to-Live) value for IP address in days'
+        },
+        required: 'true',
+        type: {
+          $ip: 'string',
+          $desc: 'string',
+          $TTL: 'number'
+        },
+        schema: {
+          $ip: '192.168.0.1',
+          $desc: 'Some description',
+          $TTL: 1,
+        }
+  }
   */
   if (request.decodedToken.role == 'admin') {
     //Tallennetaan pyynnön body muuttujaan
@@ -47,9 +87,6 @@ ipsRouter.post('/', auth, async (request, response) => {
     })
     //Tallennetaan ip kantaan
     const savedIP = await ip.save()
-    //Tallennetaan käyttäjän tietoihin tallenetun IP:n id
-    user.ips = user.ips.concat(savedIP._id)
-    await user.save()
     //Palautetaan tallennettu IP
     response.status(201).json(savedIP)
   }
@@ -102,6 +139,22 @@ ipsRouter.post('/next-ip', auth, async (request, response, next) => {
   #swagger.summary = 'Endpoint for provide next free IP address.'
   #swagger.description = 'Endpoint for provide next free IP address.'
   #swagger.security = [{"bearerAuth": []}]
+  #swagger.parameters['desc','amount'] = {
+        in: 'body',
+        description: {
+          $desc: 'Description for IP address',
+          $amount: 'Amount of ip addresses needed'
+        },
+        required: 'true',
+        type: {
+          $desc: 'string',
+          $amount: 'number'
+        },
+        schema: {
+          $desc: 'Some description',
+          $amount: 1,
+        }
+  }
   */
   const body = request.body
   const amount = body.amount
@@ -131,12 +184,6 @@ ipsRouter.post('/next-ip', auth, async (request, response, next) => {
       })
       //Varataan IP-osoitteet käyttöön
       const savedIP = await IPs.insertMany(ip)
-      savedIP.forEach((e) => {
-        user.ips.push(e._id)
-      })
-
-      //user.ips = user.ips.concat(savedIP._id)
-      await user.save()
       //Palautetaan varattu IP-osoite
       response.status(201).json({ message: 'Uusi IP-osoite luotu', savedIP })
     })
@@ -153,6 +200,22 @@ ipsRouter.put('/next-ip/:id', auth, async (request, response, next) => {
   #swagger.summary = 'Endpoint for provide next free IP address confirm.'
   #swagger.description = 'Endpoint for provide next free IP address confirm.'
   #swagger.security = [{"bearerAuth": []}]
+  #swagger.parameters['desc','TTL'] = {
+        in: 'body',
+        description: {
+          $desc: 'Description for IP address',
+          $TTL: 'TTL (Time-to-Live) value for IP address in days',
+        },
+        required: 'true',
+        type: {
+          $desc: 'string',
+          $TTL: 'number'
+        },
+        schema: {
+          $desc: 'Some description',
+          $TTL: 1,
+        }
+  }
   */
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen
@@ -190,33 +253,25 @@ ipsRouter.get('/:id', auth, async (request, response) => {
 })
 
 // delete IP address by id
-ipsRouter.delete('/', auth, async (request, response) => {
+ipsRouter.delete('/:ids', auth, async (request, response) => {
   /*
   #swagger.tags = ['IP address']
   #swagger.summary = 'Endpoint for delete IP addresses.'
   #swagger.description = 'Endpoint for delete IP addresses.'
   #swagger.security = [{"bearerAuth": []}]
   */
-  const decodedToken = request.decodedToken
-  const ipIds = request.body.ids
-
   try {
-    if (decodedToken.role === 'admin') {
-      // remove IPs from IP model
-      await IPs.deleteMany({ _id: { $in: ipIds } })
+    const ipIds = request.params.ids.split(',')
+    const userID = request.decodedToken.id
 
-      // remove IP ids from user's ips array
-      await User.updateMany(
-        { ips: { $in: ipIds } },
-        { $pull: { ips: { $in: ipIds } } }
-      )
+    const user = await User.findOne({ _id: userID })
+    const query = await IPs.find({ _id: { $in: ipIds }, user: user })
 
-      response.status(204).end()
-    } else {
-      return response.status(401).json({ error: 'unauthorized' })
-    }
+    query.forEach(ip => ip.delete())
+
+    response.status(204).end()
   } catch (error) {
-    next(error)
+    response.status(401).json({message:error}).end()
   }
 })
 //Muokataan IP-osoitetta ja/tai kuvausta
@@ -226,6 +281,21 @@ ipsRouter.put('/:id', auth, async (request, response, next) => {
   #swagger.summary = 'Endpoint for edit single IP address and/or description.'
   #swagger.description = 'Endpoint for edit single IP address and/or description.'
   #swagger.security = [{"bearerAuth": []}]
+  #swagger.parameters['desc','ip'] = {
+        in: 'body',
+        description: {
+          $desc: 'New description for IP address',
+          $ip: 'IP address what you want edit',
+        },
+        type: {
+          $desc: 'string',
+          $ip: 'string'
+        },
+        schema: {
+          $desc: 'Some new description',
+          $ip: '192.168.0.2',
+        }
+  }
   */
   const body = request.body
   //Otetaan kirjautuneen käyttäjän tiedot talteen

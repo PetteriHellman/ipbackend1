@@ -39,7 +39,40 @@
         ],
         "summary": "Endpoint for save IP address for admins.",
         "description": "Endpoint for save IP address for admins.",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "ip,desc,TTL",
+            "in": "body",
+            "description": {
+              "$ip": "IP address",
+              "$desc": "Description for IP address",
+              "$TTL": "TTL (Time-to-Live) value for IP address in days"
+            },
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ip": {
+                  "type": "string",
+                  "example": "192.168.0.1"
+                },
+                "desc": {
+                  "type": "string",
+                  "example": "Some description"
+                },
+                "TTL": {
+                  "type": "number",
+                  "example": 1
+                }
+              },
+              "required": [
+                "ip",
+                "desc",
+                "TTL"
+              ]
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -85,7 +118,34 @@
         ],
         "summary": "Endpoint for provide next free IP address.",
         "description": "Endpoint for provide next free IP address.",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "desc,amount",
+            "in": "body",
+            "description": {
+              "$desc": "Description for IP address",
+              "$amount": "Amount of ip addresses needed"
+            },
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "desc": {
+                  "type": "string",
+                  "example": "Some description"
+                },
+                "amount": {
+                  "type": "number",
+                  "example": 1
+                }
+              },
+              "required": [
+                "desc",
+                "amount"
+              ]
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -138,6 +198,32 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "desc,TTL",
+            "in": "body",
+            "description": {
+              "$desc": "Description for IP address",
+              "$TTL": "TTL (Time-to-Live) value for IP address in days"
+            },
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "desc": {
+                  "type": "string",
+                  "example": "Some description"
+                },
+                "TTL": {
+                  "type": "number",
+                  "example": 1
+                }
+              },
+              "required": [
+                "desc",
+                "TTL"
+              ]
             }
           }
         ],
@@ -251,6 +337,31 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "desc,ip",
+            "in": "body",
+            "description": {
+              "$desc": "New description for IP address",
+              "$ip": "IP address what you want edit"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "desc": {
+                  "type": "string",
+                  "example": "Some new description"
+                },
+                "ip": {
+                  "type": "string",
+                  "example": "192.168.0.2"
+                }
+              },
+              "required": [
+                "desc",
+                "ip"
+              ]
+            }
           }
         ],
         "responses": {
@@ -290,9 +401,47 @@
         "tags": [
           "Register"
         ],
-        "summary": "Create new user",
-        "description": "Create new user",
-        "parameters": [],
+        "summary": "Endpoint for create a new user",
+        "description": "Endpoint for create a new user",
+        "parameters": [
+          {
+            "name": "email,name,password,group",
+            "in": "body",
+            "required": {
+              "$email": "true",
+              "$name": "true",
+              "$password": "true"
+            },
+            "description": {
+              "$email": "Email for user",
+              "$name": "Name for user",
+              "$password": "Password for user",
+              "$group": "Group for user"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "joh.doe@email.com"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "12345678"
+                }
+              },
+              "required": [
+                "email",
+                "name",
+                "password"
+              ]
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -326,8 +475,8 @@
         "tags": [
           "Admin"
         ],
-        "summary": "Get all users",
-        "description": "Get all users",
+        "summary": "Endpoint for get all users",
+        "description": "Endpoint for get all users",
         "parameters": [],
         "responses": {
           "200": {
@@ -352,8 +501,8 @@
         "tags": [
           "User"
         ],
-        "summary": "Get user",
-        "description": "Get user",
+        "summary": "Endpoint for get user",
+        "description": "Endpoint for get user",
         "parameters": [],
         "responses": {
           "200": {
@@ -378,8 +527,8 @@
         "tags": [
           "Admin"
         ],
-        "summary": "Delete user and ip addresses belong to it",
-        "description": "Delete user and ip addresses belong to it",
+        "summary": "Endpoint for delete user and ip addresses belong to it",
+        "description": "Endpoint for delete user and ip addresses belong to it",
         "parameters": [
           {
             "name": "id",
@@ -407,7 +556,11 @@
     },
     "/api/users/{id}/role": {
       "put": {
-        "description": "",
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Endpoint for change role",
+        "description": "Endpoint for change role",
         "parameters": [
           {
             "name": "id",
@@ -415,6 +568,16 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "in": "body",
+            "description": {
+              "$role": "Admin or user role"
+            },
+            "schema": {
+              "$ref": "#/components/schemas/role"
             }
           }
         ],
@@ -432,6 +595,11 @@
             "description": "Not Found"
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -450,7 +618,11 @@
     },
     "/api/users/passwordChange/": {
       "post": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "summary": "Endpoint for change user passwords.",
+        "description": "Endpoint for change user passwords.",
         "parameters": [],
         "responses": {
           "200": {
@@ -466,6 +638,11 @@
             "description": "Internal Server Error"
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -525,9 +702,48 @@
         "tags": [
           "Network"
         ],
-        "summary": "Make new network",
-        "description": "Make new network",
-        "parameters": [],
+        "summary": "Endpoint for make a new network",
+        "description": "Endpoint for make a new network",
+        "parameters": [
+          {
+            "name": "networkName,hostMin,hostMax,hostNetwork,networkActive",
+            "in": "body",
+            "description": {
+              "$networkName": "Name for network",
+              "$hostMin": "Min IP address for range of hosted IP address",
+              "$hostMax": "Max IP address for range of hosted IP address",
+              "$hostNetwork": "Subnet for host network without / mark",
+              "$networkActive": "True or false if this netwoork is active"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "networkName": {
+                  "type": "string",
+                  "example": "SomeNetwork"
+                },
+                "hostMin": {
+                  "type": "string",
+                  "example": "192.168.0.100"
+                },
+                "hostMax": {
+                  "type": "string",
+                  "example": "192.168.0.200"
+                },
+                "hostNetwork": {
+                  "type": "number",
+                  "example": 24
+                }
+              },
+              "required": [
+                "networkName",
+                "hostMin",
+                "hostMax",
+                "hostNetwork"
+              ]
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -572,8 +788,8 @@
         "tags": [
           "Network"
         ],
-        "summary": "Get all networks",
-        "description": "Get all networks",
+        "summary": "Endpoint for get all networks",
+        "description": "Endpoint for get all networks",
         "parameters": [],
         "responses": {
           "200": {
@@ -592,7 +808,11 @@
     },
     "/api/admin/network/{id}": {
       "put": {
-        "description": "",
+        "tags": [
+          "Network"
+        ],
+        "summary": "Endpoint for make network active",
+        "description": "Endpoint for make network active",
         "parameters": [
           {
             "name": "id",
@@ -614,6 +834,11 @@
             "description": "Unauthorized"
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -635,8 +860,8 @@
         "tags": [
           "Admin"
         ],
-        "summary": "Endpoint for change user passwords.",
-        "description": "Endpoint for change user passwords.",
+        "summary": "Endpoint for change anyone passwords.",
+        "description": "Endpoint for change anyone passwords.",
         "parameters": [
           {
             "name": "id",
@@ -689,6 +914,15 @@
         "description": "Bearer Token",
         "scheme": "bearer",
         "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "role": {
+        "type": "string",
+        "enum": [
+          "admin",
+          "user"
+        ]
       }
     }
   }

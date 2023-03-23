@@ -6,9 +6,32 @@ const auth = require('../utils/auth')
 networkRouter.post('/',auth, async (request, response) => {
   /*
   #swagger.tags = ['Network']
-  #swagger.summary = 'Make new network'
-  #swagger.description = 'Make new network'
+  #swagger.summary = 'Endpoint for make a new network'
+  #swagger.description = 'Endpoint for make a new network'
   #swagger.security = [{"bearerAuth": []}]
+  #swagger.parameters['networkName','hostMin','hostMax','hostNetwork','networkActive'] = {
+        in: 'body',
+        description: {
+          $networkName: 'Name for network',
+          $hostMin: 'Min IP address for range of hosted IP address',
+          $hostMax: 'Max IP address for range of hosted IP address',
+          $hostNetwork: 'Subnet for host network without / mark',
+          $networkActive: 'True or false if this netwoork is active'
+        },
+        type: {
+          $name: 'string',
+          $hostMin: 'string',
+          $hostMax: 'string',
+          $hostNetwork: 'number',
+          $networkActive: 'boolean'
+        },
+        schema: {
+          $networkName: 'SomeNetwork',
+          $hostMin: '192.168.0.100',
+          $hostMax: '192.168.0.200',
+          $hostNetwork: 24,
+        }
+  }
   */
   const body = request.body
   
@@ -28,8 +51,8 @@ networkRouter.post('/',auth, async (request, response) => {
 networkRouter.get('/',auth, async (request, response) => {
   /*
   #swagger.tags = ['Network']
-  #swagger.summary = 'Get all networks'
-  #swagger.description = 'Get all networks'
+  #swagger.summary = 'Endpoint for get all networks'
+  #swagger.description = 'Endpoint for get all networks'
   #swagger.security = [{"bearerAuth": []}]
   */
   const network = await Network
@@ -40,6 +63,12 @@ networkRouter.get('/',auth, async (request, response) => {
 
 //update networkActive
 networkRouter.put('/:id', auth, async (request, response) => {
+  /*
+  #swagger.tags = ['Network']
+  #swagger.summary = 'Endpoint for make network active'
+  #swagger.description = 'Endpoint for make network active'
+  #swagger.security = [{"bearerAuth": []}]
+  */
   const { id } = request.params
   const { networkActive } = request.body
 

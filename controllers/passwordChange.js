@@ -14,6 +14,12 @@ const getTokenFrom = request => {
 }
 
 passRouter.post('/', async (request, response, next) => {
+  /*
+  #swagger.tags = ['User']
+  #swagger.summary = 'Endpoint for change user passwords.'
+  #swagger.description = 'Endpoint for change user passwords.'
+  #swagger.security = [{"bearerAuth": []}]
+  */
   // Tarkistetaan kirjautuminen
   const token = getTokenFrom(request)
   let decodedToken

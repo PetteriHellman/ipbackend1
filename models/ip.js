@@ -21,12 +21,10 @@ const ipSchema = new mongoose.Schema({
     type: Date,
     expires: 0,
   },
-  user: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    }
-  ],
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
 })
 
 ipSchema.plugin(uniqueValidator)

@@ -27,12 +27,6 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin', 'null'],
     default: 'null',
   },
-  ips: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'IPs'
-    }
-  ],
 })
 userSchema.plugin(uniqueValidator)
 userSchema.set('toJSON', {

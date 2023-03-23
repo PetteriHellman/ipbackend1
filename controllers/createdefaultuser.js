@@ -66,7 +66,7 @@ const connectToDatabase = async () => {
       info.hostMin = await question(prompt('Enter hostmin ip-address for randomip pool: '))
       info.hostMax = await question(prompt('Enter hostmax ip-address for randomip pool: '))
       info.hostNetwork = await question(prompt('Enter subnet without / mark (example 22 or 24) for randomip pool: '))
-      await createDefaultNetwork(info.networkName, info.hostMin, info.hostMax, info.hostNetwork)
+      await createDefaultNetwork(info.networkName, info.hostMin, info.hostMax, info.hostNetwork, true)
     }
     rl.close()
   }
@@ -100,13 +100,14 @@ const createDefaultUser = async (email, name, passwordHash) => {
   }
 }
 
-const createDefaultNetwork = async (networkName, hostMin, hostMax, hostNetwork) => {
+const createDefaultNetwork = async (networkName, hostMin, hostMax, hostNetwork, networkActive) => {
   try {
     const newNetwork = new Network({
       networkName,
       hostMin,
       hostMax,
-      hostNetwork
+      hostNetwork,
+      networkActive
     })
 
     await newNetwork.save()
