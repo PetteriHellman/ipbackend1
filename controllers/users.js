@@ -49,16 +49,15 @@ usersRouter.post('/', async (request, response) => {
 
 })
 
-usersRouter.get('/',auth, async (request, response) => {
+usersRouter.get('/', auth, async (request, response) => {
   /*
   #swagger.tags = ['Admin']
   #swagger.summary = 'Endpoint for get all users'
   #swagger.description = 'Endpoint for get all users'
   #swagger.security = [{"bearerAuth": []}]
   */
-  if (request.decodedToken.role == 'admin'){
-    const users = await User
-      .find({}).populate('ips', { ip: 1, desc: 1, expirationDate: 1, createdAt: 1 })
+  if (request.decodedToken.role == 'admin') {
+    const users = await User.find({})
     response.json(users)
   }
   else {
@@ -66,19 +65,22 @@ usersRouter.get('/',auth, async (request, response) => {
   }
 })
 
-usersRouter.get('/user',auth, async (request, response) => {
+usersRouter.get('/:userid', auth, async (request, response) => {
   /*
   #swagger.tags = ['User']
   #swagger.summary = 'Endpoint for get user'
   #swagger.description = 'Endpoint for get user'
   #swagger.security = [{"bearerAuth": []}]
   */
-  const user = await User.findById(request.decodedToken.id).populate('ips', { ip: 1, desc: 1, expirationDate: 1, createdAt: 1 })
-  if (user) {
-    response.json(user)
-  } else {
-    response.status(404).end()
-  }
+  const decodedToken = request.decodedToken
+  if (request.params.userid === decodedToken.id || decodedToken.role === 'admin') {
+    const ips = await User.findById(request.params.userid)
+    if (ips) {
+      response.json(ips)
+    } else {
+      response.status(404).end()
+    }
+  } else response.status(401).end()
 })
 
 //Poistetaan käyttäjä
