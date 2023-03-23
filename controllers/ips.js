@@ -77,13 +77,13 @@ ipsRouter.post('/', auth, async (request, response) => {
 
     const user = await User.findById(request.decodedToken.id)
 
-    //Vanhenemis aika millisekunneissa jos body.TTL on vuorokausia
-    const expireDate = Date.now() + body.TTL * 86400 * 1000
+    //Adminin lisäämä IP - vanhenee tuhannessa päivässä
+    const expireDate = Date.now() + 1000 * 86400 * 1000
 
     const ip = new IPs({
       ip: body.ip,
       desc: body.desc,
-      user: user._id,
+      user: user,
       expirationDate: expireDate,
     })
     //Tallennetaan ip kantaan
@@ -344,7 +344,7 @@ ipsRouter.put('/', auth, async (request, response) => {
     ips.forEach(ip => {
       const updatedIp = ipsToUpdate.find(item => mongoose.Types.ObjectId(item._id).equals(ip._id))
       const expireDate = Date.now() + updatedIp.TTL * 86400 * 1000
-      ip.expirationDate = expireDate
+      if(expireDate > ip.expirationDate) ip.expirationDate = expireDate
       ip.save()
     })
 
