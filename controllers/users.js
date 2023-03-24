@@ -131,7 +131,7 @@ usersRouter.put('/:userId/role', auth, async (request, response) => {
   const userId = request.params.userId
   const { role } = request.body
 
-  if (!['user', 'admin'].includes(role)) {
+  if (!['user', 'admin', 'null'].includes(role)) {
     return response.status(400).json({ error: 'Invalid role' })
   }
 
