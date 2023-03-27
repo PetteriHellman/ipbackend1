@@ -62,9 +62,9 @@ const connectToDatabase = async () => {
       logger.error('There are already network in the database, skipping network creation')
     }
     else {
-      info.networkName = await question(prompt('Enter network name for randomip pool: '))
-      info.hostMin = await question(prompt('Enter hostmin ip-address for randomip pool: '))
-      info.hostMax = await question(prompt('Enter hostmax ip-address for randomip pool: '))
+      info.networkName = await question(prompt('Enter network name for ip pool: '))
+      info.hostMin = await question(prompt('Enter hostmin ip-address for ip pool: '))
+      info.hostMax = await question(prompt('Enter hostmax ip-address for ip pool: '))
       info.hostNetwork = await question(prompt('Enter subnet without / mark (example 22 or 24) for randomip pool: '))
       await createDefaultNetwork(info.networkName, info.hostMin, info.hostMax, info.hostNetwork, true)
     }
