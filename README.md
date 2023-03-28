@@ -21,7 +21,7 @@ Any created users must then be validated by an admin to allow regular functional
 
 Users are allowed to change their own password, request IPs, extend the TTL of IPs and regular login/ logout functions. Admins can change another users password at will, allow and revoke usability from users, add ips, remove ips, remove users and promote users to admins.
 
-The code has 3 schemas for users, ips and networks and API endpoints are documented via SWAGGER. The SWAGGER documentation can be accessed via (yourLocalhostAddress)/api-docs/.
+The code has 3 schemas for users, ips and networks and API endpoints are documented via SWAGGER. The SWAGGER documentation can be accessed via (yourLocalhostAddress)/api-docs/. To run swagger auto-gen run the command "npm run swagger-autogen"
 
 The project also has an eslintrc configuration file and multiple .REST request files.
 
